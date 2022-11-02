@@ -35,12 +35,12 @@ using namespace std;
 #include <CGAL/convex_hull_2.h>
 #include <CGAL/Polygon_2.h>
 #include <fstream>
+#include <time.h>
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef K::Point_2 Point_2;
 typedef std::istream_iterator< Point_2 > point2_iterator;
 typedef std::vector<Point_2> Points;
 typedef std::vector<Point_2>::iterator pveciterator;
-
 
 typedef CGAL::Polygon_2<K> Polygon_2;
 
@@ -54,40 +54,250 @@ struct Point1{
     double y;
 };
  
-// enwsi olo ton pio eksoterikwn simeiwn dimiourgia enos "kuklou"
-// tora exo enomena ola ta eksoterika simeia kai esoterika isos
-// anoigo for (oso uparxoun esoterika simeia kane)
-// ---- vroxos( gia kathe akmi )
-// ---- ---- gia kathe simeio vres tin min-distance me akmi 
-
-// int con(){
-//     create_polygonumiki_grammi_me_ta_pio_eksoterika();
-    
-//     while(esoterikes_simeio>0){
-
-//         esoteriko_simeio = Null;
-//         //analoga to emvadon epilego kai enwnw simeio_1_akmis kai simeio_2 akmis me simeio epilogis
-//         for(akmi from akmes){
-
-//             min = MAX_INT;
-//             akmi;
-//             simeio_epilogis;
-
-//             for( gia kathe esoteriko simeio){
-//                 simeio;
-//                 dist = distance( akmi, simeio);
-//                 if( dist < min){
-//                     min = dist;
-//                     simeio_epilogis = simeio;
-//                 }
-//             }
-
-//             emb = emvadon( simeio_1_akmis, simeio_2_akmis, simeio_epilogis);
-//             //analoga to emvadon epilego kai enwnw simeio_1_akmis kai simeio_2 akmis me simeio epilogis
-//         }
-//     }
-// }
 typedef K::Segment_2 Segment_2;
+typedef Polygon_2::Vertex_iterator VertexIterator;
+
+
+Polygon_2 min_area(vector<Point_2> internal_points, Polygon_2 polygon){
+    
+    srand(time(NULL));
+
+    while( !internal_points.empty() ){
+        
+        
+        // min area is MAX 
+        double min_area = numeric_limits<double>::max();
+        Point_2 internal_point;
+        Segment_2 edge;
+        int num_internal_point;
+        for(const Segment_2& e  : polygon.edges()){
+
+            // min distance is MAX            
+            double min_distance = numeric_limits<double>::max();
+            Point_2 internal_point_to_choise;
+
+            // I will find the internal point with minimum distance from edge
+            // And I will save it
+            for(int i=0; i < internal_points.size(); i++){
+                Point_2 point = internal_points.at(i);
+                double distance = CGAL::squared_distance(e, point);
+
+                if( distance < min_distance){
+                    min_distance = distance;
+                    internal_point_to_choise = point;
+                    num_internal_point = i;
+                }
+            }   
+
+            // double area = CGAL::area()
+            Point_2 p1 = e.point(0);
+            Point_2 p2 = e.point(1);
+            
+            // I will find the area for p1, p2 and internal_point_to_choise
+            double area = CGAL::area( p1, p2, internal_point_to_choise);
+
+            if( area < min_area){
+                min_area = area;
+                internal_point = internal_point_to_choise;
+                edge = e;
+            }
+        }
+
+        // Delete the interal point from vector
+        internal_points.erase( internal_points.begin() + num_internal_point);
+        
+        // Take the points from edge
+        Point_2 p1 = edge.point(0);
+        Point_2 p2 = edge.point(1);
+
+        // Create 2 new edges
+        Segment_2 edge_1( p1, internal_point);
+        Segment_2 edge_2( p2, internal_point);
+
+        // na diagraspo tin palia akmi apo polygono
+        // na prostheso tis dyo nees
+        
+        VertexIterator iter;
+        for( 
+            iter = polygon.vertices_begin();
+            iter != polygon.vertices_end();
+            ++iter
+        ){
+            if( iter->x() == p2.x() && iter->y() == p2.y()){
+                break;
+            }
+        }
+
+
+        polygon.insert(iter, internal_point);
+
+    }
+
+    return polygon;
+}
+
+Polygon_2 max_area(vector<Point_2> internal_points, Polygon_2 polygon){
+    
+    srand(time(NULL));
+
+    while( !internal_points.empty() ){
+        
+        
+        // max area is MAX 
+        double max_area = numeric_limits<double>::min();
+        Point_2 internal_point;
+        Segment_2 edge;
+        int num_internal_point;
+        for(const Segment_2& e  : polygon.edges()){
+
+            // min distance is MAX            
+            double min_distance = numeric_limits<double>::max();
+            Point_2 internal_point_to_choise;
+
+            // I will find the internal point with minimum distance from edge
+            // And I will save it
+            for(int i=0; i < internal_points.size(); i++){
+                Point_2 point = internal_points.at(i);
+                double distance = CGAL::squared_distance(e, point);
+
+                if( distance < min_distance){
+                    min_distance = distance;
+                    internal_point_to_choise = point;
+                    num_internal_point = i;
+                }
+            }   
+
+            // double area = CGAL::area()
+            Point_2 p1 = e.point(0);
+            Point_2 p2 = e.point(1);
+            
+            // I will find the area for p1, p2 and internal_point_to_choise
+            double area = CGAL::area( p1, p2, internal_point_to_choise);
+
+            if( area > max_area){
+                max_area = area;
+                internal_point = internal_point_to_choise;
+                edge = e;
+            }
+        }
+
+        // Delete the interal point from vector
+        internal_points.erase( internal_points.begin() + num_internal_point);
+        
+        // Take the points from edge
+        Point_2 p1 = edge.point(0);
+        Point_2 p2 = edge.point(1);
+
+        // Create 2 new edges
+        Segment_2 edge_1( p1, internal_point);
+        Segment_2 edge_2( p2, internal_point);
+
+        // na diagraspo tin palia akmi apo polygono
+        // na prostheso tis dyo nees
+        
+        VertexIterator iter;
+        for( 
+            iter = polygon.vertices_begin();
+            iter != polygon.vertices_end();
+            ++iter
+        ){
+            if( iter->x() == p2.x() && iter->y() == p2.y()){
+                break;
+            }
+        }
+
+
+        polygon.insert(iter, internal_point);
+
+    }
+
+    return polygon;
+}
+
+Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon){
+    
+    srand(time(NULL));
+
+    while( !internal_points.empty() ){
+        
+        
+        // max area is MAX 
+        double max_area = numeric_limits<double>::min();
+        Point_2 internal_point;
+        Segment_2 edge;
+        int num_internal_point;
+
+
+        int my_rand = rand();
+        int num_edges = polygon.edges().size();;
+        
+        int num = my_rand%num_edges;
+
+        int i = 0;
+        Segment_2 e;
+        // Change random edge
+        for(const Segment_2& edge  : polygon.edges()){
+            if( i == num){
+                e = edge;
+                break;
+            }
+            i++;
+        }
+
+
+        // min distance is MAX            
+        double min_distance = numeric_limits<double>::max();
+        Point_2 internal_point_to_choise;
+
+        // I will find the internal point with minimum distance from edge
+        // And I will save it
+        for(int i=0; i < internal_points.size(); i++){
+            Point_2 point = internal_points.at(i);
+            double distance = CGAL::squared_distance(e, point);
+
+            if( distance < min_distance){
+                min_distance = distance;
+                internal_point_to_choise = point;
+                num_internal_point = i;
+            }
+        }   
+    
+        internal_point = internal_point_to_choise;
+        edge = e;
+
+        // Delete the interal point from vector
+        internal_points.erase( internal_points.begin() + num_internal_point);
+        
+        // Take the points from edge
+        Point_2 p1 = edge.point(0);
+        Point_2 p2 = edge.point(1);
+
+        // Create 2 new edges
+        Segment_2 edge_1( p1, internal_point);
+        Segment_2 edge_2( p2, internal_point);
+
+        // na diagraspo tin palia akmi apo polygono
+        // na prostheso tis dyo nees
+        
+        VertexIterator iter;
+        for( 
+            iter = polygon.vertices_begin();
+            iter != polygon.vertices_end();
+            ++iter
+        ){
+            if( iter->x() == p2.x() && iter->y() == p2.y()){
+                break;
+            }
+        }
+
+
+        polygon.insert(iter, internal_point);
+
+    }
+
+    return polygon;
+}
+
 
 /// @brief
 /// @param points 
@@ -105,6 +315,8 @@ int convex_hull( vector<Point_2> points, int edge_selection){
     for (pveciterator iter=result.begin(); iter!=result.end(); ++iter){
         polygon.push_back(*iter);
     }
+
+    std::cout << "\n\nBefore from algorithm:\n\n";
     
     // Take the vertices from polyhon
     for(const Point_2& p : polygon.vertices()){
@@ -139,11 +351,30 @@ int convex_hull( vector<Point_2> points, int edge_selection){
         cout << "Inernal    " << internal_points.at(i) << endl;
     }
 
+    if( edge_selection == 1){
+        polygon = random_edge(internal_points, polygon);
+    }
+    else if( edge_selection == 2){
+        polygon = min_area(internal_points, polygon);
+    }
+    else{
+        polygon = max_area(internal_points, polygon);
+    }
+    std::cout << "\n\nAfter from algorithm:\n\n";
 
+    // Take the vertices from polyhon
+    for(const Point_2& p : polygon.vertices()){
+        std::cout << "Vertices  " << p << std::endl;
+    }
+    
+    // Take the edges from polygon
+    for(const Segment_2& e  : polygon.edges()){
+        std::cout << "Edge  " << e << std::endl;
+    }
+    
     return EXIT_SUCCESS;
 
 }
-
 
 int main(int argc, char* argv[]){
     if(argc < 9){
