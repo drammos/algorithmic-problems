@@ -69,53 +69,99 @@ Polygon_2 min_area(vector<Point_2> internal_points, Polygon_2 polygon){
         double min_area = numeric_limits<double>::max();
         Point_2 internal_point;
         Segment_2 edge;
-        int num_internal_point;
+        int num_internal_point = 0;
+
         for(const Segment_2& e  : polygon.edges()){
 
             // min distance is MAX            
             double min_distance = numeric_limits<double>::max();
             Point_2 internal_point_to_choise;
+            int num_internal_point_to_choise = 0;
+            bool flag_find_point = false;
+
+
+            Point_2 p_1 = e.point(0);
+            Point_2 p_2 = e.point(1);
 
             // I will find the internal point with minimum distance from edge
             // And I will save it
             for(int i=0; i < internal_points.size(); i++){
                 Point_2 point = internal_points.at(i);
+
+                bool flag = false;
+
+                Segment_2 seg1( p_1, point);
+                Segment_2 seg2( p_2, point);
+
+                // Check for the edges and internalpoints
+                // Because the polygon must be simple every time
+                for(const Segment_2& edge_ :polygon.edges()){
+
+                    Point_2 first_point = edge_.point(0);
+                    Point_2 second_point = edge_.point(1);
+
+                    // For the same points in differents eges
+                    if( first_point != p_1 && second_point != p_1){
+                        if(CGAL::do_intersect(seg1, edge_) == true){
+                            flag = true;
+                            break;
+                        }
+                    }
+
+                    // For the same points in differents eges
+                    if( first_point != p_2 && second_point != p_2){
+                        if(CGAL::do_intersect(seg2, edge_) == true){
+                            flag = true;
+                            break;
+                        }
+                    }
+
+                }
+                
+                // If flag == true continue with next internal point
+                if( flag == true){
+                    continue;
+                }
+    
+                // Find the distance
                 double distance = CGAL::squared_distance(e, point);
 
+                
                 if( distance < min_distance){
+                    flag_find_point = true;
                     min_distance = distance;
                     internal_point_to_choise = point;
-                    num_internal_point = i;
+                    num_internal_point_to_choise = i;
                 }
-            }   
+            }  
 
-            // double area = CGAL::area()
-            Point_2 p1 = e.point(0);
-            Point_2 p2 = e.point(1);
+            // If you save internal point for the edge -e
+            if(flag_find_point == true){
+                Point_2 p1 = e.point(0);
+                Point_2 p2 = e.point(1);
+                
+                // I will find the area for p1, p2 and internal_point_to_choise
+                double area = CGAL::area( p1, p2, internal_point_to_choise);
+
+                // Min Area
+                if( area < min_area){
+
+                    min_area = area;
+                    internal_point = internal_point_to_choise;
+                    num_internal_point = num_internal_point_to_choise;
+                    edge = e;
             
-            // I will find the area for p1, p2 and internal_point_to_choise
-            double area = CGAL::area( p1, p2, internal_point_to_choise);
-
-            if( area < min_area){
-                min_area = area;
-                internal_point = internal_point_to_choise;
-                edge = e;
+                }
             }
         }
 
-        // Delete the interal point from vector
         internal_points.erase( internal_points.begin() + num_internal_point);
-        
+
         // Take the points from edge
         Point_2 p1 = edge.point(0);
         Point_2 p2 = edge.point(1);
 
-        // Create 2 new edges
-        Segment_2 edge_1( p1, internal_point);
-        Segment_2 edge_2( p2, internal_point);
 
-        // na diagraspo tin palia akmi apo polygono
-        // na prostheso tis dyo nees
         
         VertexIterator iter;
         for( 
@@ -128,7 +174,7 @@ Polygon_2 min_area(vector<Point_2> internal_points, Polygon_2 polygon){
             }
         }
 
-
+        // Change the polygon
         polygon.insert(iter, internal_point);
 
     }
@@ -273,8 +319,8 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon){
         Point_2 p2 = edge.point(1);
 
         // Create 2 new edges
-        Segment_2 edge_1( p1, internal_point);
-        Segment_2 edge_2( p2, internal_point);
+        // Segment_2 edge_1( p1, internal_point);
+        // Segment_2 edge_2( p2, internal_point);
 
         // na diagraspo tin palia akmi apo polygono
         // na prostheso tis dyo nees
@@ -346,7 +392,7 @@ int convex_hull( vector<Point_2> points, int edge_selection){
         }
     }
 
-    // Print the insternal points
+    // Print the internal points
     for(int i = 0; i < internal_points.size(); i++){
         cout << "Inernal    " << internal_points.at(i) << endl;
     }
@@ -372,6 +418,11 @@ int convex_hull( vector<Point_2> points, int edge_selection){
         std::cout << "Edge  " << e << std::endl;
     }
     
+
+    cout << "Polygon is simple:     "<< polygon.is_simple() << endl;
+
+
+
     return EXIT_SUCCESS;
 
 }
