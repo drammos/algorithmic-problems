@@ -6,7 +6,7 @@
 
 
 #include <time.h>
-#include "convex_hull_algorithmic.h"
+#include "convex_hull_algorithmic.hpp"
 
 // ./main -i file -o outfile -algorithm convex_hull -edge_selection 1
 
@@ -25,8 +25,10 @@ int main(int argc, char* argv[]){
         init = argv[10];
     }
 
+    // Cout in file
+    ofstream cout(output_file);
+    std::cout.rdbuf(cout.rdbuf());
     
-
     // Read input file
     vector< Point_2> points;
 
@@ -36,6 +38,13 @@ int main(int argc, char* argv[]){
     int num;
     double x;
     double y;
+    string line;
+    
+    // Read the first 2 lines with (#)
+    getline(input_file, line);
+    getline(input_file, line);
+    
+    
     // Add the point from input-file
     while(input_file >> num >> x >> y)
     {   
@@ -44,11 +53,14 @@ int main(int argc, char* argv[]){
         // Add the points in vector
         points.push_back( new_point);
     }
+
+    // Close the file
     input_file.close();
     
     // Start the time
     int time_start = clock();
     double area;
+
     if( algorithm.compare("convex_hull") == 0){
         area = convex_hull(points, edge_selection);
     }
@@ -57,6 +69,7 @@ int main(int argc, char* argv[]){
     }
 
     int time_end = clock();
+    
     int time = time_end - time_start;
     cout << "area: " << area << endl;
 
