@@ -6296,7 +6296,7 @@ CGAL/version.h
 CGAL/Kernel/Wutils.h
 -
 
-/home/dr/algorithmic-problems/convex_hull_algorithmic.h
+/home/dr/algorithmic-problems/convex_hull_algorithmic.hpp
 iostream
 -
 CGAL/Exact_predicates_inexact_constructions_kernel.h
@@ -6313,6 +6313,6 @@ time.h
 /home/dr/algorithmic-problems/main.cpp
 time.h
 -
-convex_hull_algorithmic.h
-/home/dr/algorithmic-problems/convex_hull_algorithmic.h
+convex_hull_algorithmic.hpp
+/home/dr/algorithmic-problems/convex_hull_algorithmic.hpp
 
