@@ -1,4 +1,4 @@
-#include "convex_hull_algorithmic.h"
+#include "convex_hull_algorithmic.hpp"
 
 // Algorithmic for edge with Min Area
 Polygon_2 min_area(vector<Point_2> internal_points, Polygon_2 polygon){
