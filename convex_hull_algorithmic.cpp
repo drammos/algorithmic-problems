@@ -368,7 +368,7 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon){
 /// @param points 
 /// @param edge_selection 
 /// @return 
-double convex_hull( vector<Point_2> points, int edge_selection){
+long double convex_hull( vector<Point_2> points, int edge_selection){
     
     Points result;
 
@@ -426,7 +426,7 @@ double convex_hull( vector<Point_2> points, int edge_selection){
     
     cout << "edge_selection: " << edge_selection << endl;
 
-    double area = polygon.area();
+    long double area = polygon.area();
     cout << "Polygon is simple:     "<< polygon.is_simple() << endl;
 
 

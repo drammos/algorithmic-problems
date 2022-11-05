@@ -59,7 +59,7 @@ int main(int argc, char* argv[]){
     
     // Start the time
     int time_start = clock();
-    double area;
+    long double area;
 
     if( algorithm.compare("convex_hull") == 0){
         area = convex_hull(points, edge_selection);
