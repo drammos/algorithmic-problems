@@ -410,7 +410,7 @@ double convex_hull( vector<Point_2> points, int edge_selection){
     else{
         polygon = max_area(internal_points, polygon);
     }
-    std::cout << "Polyganization";
+    std::cout << "Polyganization:\n";
 
     // Take the vertices from polyhon
     for(const Point_2& point : polygon.vertices()){
