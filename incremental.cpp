@@ -1,21 +1,21 @@
-#include <CGAL/convex_hull_2.h>
-#include <CGAL/Polygon_2.h>
-#include <CGAL/Convex_hull_traits_adapter_2.h>
-#include <CGAL/Circular_kernel_intersections.h>
-#include <CGAL/property_map.h>
-#include <iostream>
-#include <fstream>
-#include "utils.hpp"
-#include <random>
-#include <time.h>
+// #include <CGAL/convex_hull_2.h>
+// #include <CGAL/Polygon_2.h>
+// #include <CGAL/Convex_hull_traits_adapter_2.h>
+// #include <CGAL/Circular_kernel_intersections.h>
+// #include <CGAL/property_map.h>
+// #include <iostream>
+// #include <fstream>
+// #include <random>
+// #include <time.h>
 
-typedef K::Point_2 Point_2;
-typedef K::Segment_2 Segment_2;
-typedef std::vector<Point_2> Points;
-typedef CGAL::Polygon_2 <K> Polygon_2D;
-typedef CGAL::Line_2 <K> Line_2D;
-typedef Polygon_2D::Edge_const_iterator EdgeIterator;
-typedef Polygon_2D::Vertex_iterator VertexIterator;
+// typedef K::Point_2 Point_2;
+// typedef K::Segment_2 Segment_2;
+// typedef std::vector<Point_2> Points;
+// typedef CGAL::Polygon_2 <K> Polygon_2D;
+// typedef CGAL::Line_2 <K> Line_2D;
+// typedef Polygon_2D::Edge_const_iterator EdgeIterator;
+// typedef Polygon_2D::Vertex_iterator VertexIterator;
+#include "incremental.hpp"
 
 using namespace std;
 
@@ -54,28 +54,15 @@ void orientation(Polygon_2& PK, Polygon_2& pol){
     }
 }
 
-Points input_handling(string input, char* sorting){
-    ifstream file(input);
-    string line;
-    getline(file, line);
-    getline(file, line);
-
-    int i, x, y;
-    Points points;
-    while(file >> i >> x >> y){
-        Point_2 point(x,y);
-
-        points.push_back(point);
-    }
-
-    if(strcmp(sorting, "1a") == 0){
+void sorting(Points& points, string init){
+    if(!init.compare("1a")){
         cout<<"here\n";
         sort(points.begin(), points.end(), compare_1a);
     }
-    else if(strcmp(sorting, "1b") == 0){
+    else if(!init.compare("1b")){
         sort(points.begin(), points.end(), compare_1b);
     }
-    else if(strcmp(sorting, "2a") == 0){
+    else if(!init.compare("2a")){
         sort(points.begin(), points.end(), compare_2a);
     }
     else{
@@ -86,8 +73,6 @@ Points input_handling(string input, char* sorting){
     for(int i=0; i < points.size(); i++){
         cout << points.at(i) << endl;
     }
-
-    return points;
 }
 
 vector<Segment_2> red_edges(Points points, Polygon_2 pol){
@@ -150,6 +135,14 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
     it = find(pol_edges.begin(), pol_edges.end(), red);
 
     if(it != pol_edges.end()){
+        Point_2 to_add = points[0];
+        Segment_2 seg1(to_add, it->point(0));
+        Segment_2 seg2(to_add, it->point(1));
+        const auto result = CGAL::intersection(seg1, seg2);
+        if (const Segment_2* s = boost::get<Segment_2>(&*result)) {
+            std::cout <<"s"<< *s << std::endl;
+            return visible;
+        }
         visible.push_back(red);
         cout<<"Visible edges1:"<<endl;
         for(int i=0; i < visible.size(); i++){
@@ -173,18 +166,21 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
                 Segment_2 seg2(to_add, it->point(1));
                 Point_2 midPoint = CGAL::midpoint(it->point(0), it->point(1)); 
                 Segment_2 PMID(to_add, midPoint);
-                // if(seg1.has_on(it->point(1)) || seg2.has_on(it->point(0))){
-                //     cout<<"has on"<<endl;
-                //     it++;
-                //     continue;
-                // }
+                
+
                 EdgeIterator it1;
                 for(it1 = pol.edges_begin(); it1 != pol.edges_end(); it1++){
+                    const auto result = CGAL::intersection(seg1, seg2);
+                    if (const Segment_2* s = boost::get<Segment_2>(&*result)) {
+                        std::cout <<"s"<< *s << std::endl;
+                        break;
+                    }
+                    
                     if(it1 != it){
                         if(it1 != it-1 && CGAL::do_intersect(seg1, *it1)){
                             const auto result = CGAL::intersection(seg1, *it1);
                             const Point_2* p = boost::get<Point_2 >(&*result);
-                            if(p->x() != it->point(0).x() && p->y() != it->point(0).y()){
+                            if(p->x() != it->point(0).x() || p->y() != it->point(0).y()){
                                 cout<<"1intersects with "<<*it1<<endl;
                                 break;
                             }
@@ -192,19 +188,15 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
                         if(it1 != it+1 && CGAL::do_intersect(seg2, *it1)){
                             const auto result = CGAL::intersection(seg2, *it1);
                             const Point_2* p = boost::get<Point_2 >(&*result);
-                            if(p->x() != it->point(1).x() && p->y() != it->point(1).y()){
+                            if(p->x() != it->point(1).x() || p->y() != it->point(1).y()){
                                 cout<<"2intersects with "<<*it1<<endl;
                                 break;
                             }
                         }
                         if(CGAL::do_intersect(PMID, *it1)){
                             break;
-                        }
-                        
+                        }   
                     }
-                    
-                    
-                    
                 }
                 if(it1 == pol.edges_end()){
                     cout<<"end"<<endl;
@@ -232,10 +224,11 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
     }
 }
 
-int main(void){
+int incremental(Points points, int edge_selection, string initialization){
     srand(time(NULL));
     Polygon_2 pol;
-    Points points = input_handling("euro-night-0001000.instance", "1a");
+    // Points points = input_handling("euro-night-0005000.instance", "1a");
+    sorting(points, initialization);
 
     //Building initial triangle
     pol.push_back(points.at(0));
