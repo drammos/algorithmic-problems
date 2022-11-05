@@ -6296,6 +6296,10 @@ CGAL/version.h
 CGAL/Kernel/Wutils.h
 -
 
+/home/dr/algorithmic-problems/convex_hull_algorithmic.cpp
+convex_hull_algorithmic.hpp
+/home/dr/algorithmic-problems/convex_hull_algorithmic.hpp
+
 /home/dr/algorithmic-problems/convex_hull_algorithmic.hpp
 iostream
 -
@@ -6309,10 +6313,4 @@ fstream
 -
 time.h
 -
-
-/home/dr/algorithmic-problems/main.cpp
-time.h
--
-convex_hull_algorithmic.hpp
-/home/dr/algorithmic-problems/convex_hull_algorithmic.hpp
 
