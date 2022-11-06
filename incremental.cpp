@@ -134,7 +134,7 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
                 Segment_2 seg1(to_add, it->point(0));
                 Segment_2 seg2(to_add, it->point(1));
                 Point_2 midPoint = CGAL::midpoint(it->point(0), it->point(1)); 
-                Segment_2 PMID(to_add, midPoint);
+                Segment_2 mid_seg(to_add, midPoint);
                 
 
                 EdgeIterator it1;
@@ -162,7 +162,7 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
                                 break;
                             }
                         }
-                        if(CGAL::do_intersect(PMID, *it1)){
+                        if(CGAL::do_intersect(mid_seg, *it1)){
                             break;
                         }   
                     }
