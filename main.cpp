@@ -1,10 +1,3 @@
-#include <CGAL/convex_hull_2.h>
-#include <CGAL/Convex_hull_traits_adapter_2.h>
-#include <CGAL/property_map.h>
-#include <iostream>
-#include <fstream>
-#include <time.h>
-#include "convex_hull_algorithmic.hpp"
 #include "incremental.hpp"
 
 using namespace std;

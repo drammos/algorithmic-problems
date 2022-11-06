@@ -31,7 +31,7 @@ bool compare_2b(Point_2 point1, Point_2 point2){
 }
 
 //if KP and polygon have different orientation, KP is reversed
-void orientation(Polygon_2& KP, Polygon_2& pol){
+void orientation(Polygon_2D& KP, Polygon_2D& pol){
     if((pol.is_clockwise_oriented() && !KP.is_clockwise_oriented()) || (!pol.is_clockwise_oriented() && KP.is_clockwise_oriented())){
         KP.reverse_orientation();
     }
@@ -56,8 +56,8 @@ void sorting(Points& points, string init){
     }
 }
 
-vector<Segment_2> red_edges(Points points, Polygon_2 pol){
-    Polygon_2 old;
+vector<Segment_2> red_edges(Points points, Polygon_2D pol){
+    Polygon_2D old;
     //current convex hull
     CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(old));
 
@@ -67,11 +67,11 @@ vector<Segment_2> red_edges(Points points, Polygon_2 pol){
     for(const Segment_2& e  : old.edges())
         edges.push_back(e);
         
-    Polygon_2 pol1 = pol;
+    Polygon_2D pol1 = pol;
     pol1.push_back(points.at(0));
 
     //convex hull after new vertice
-    Polygon_2 newp;
+    Polygon_2D newp;
     CGAL::convex_hull_2(pol1.begin(), pol1.end(), std::back_inserter(newp));
 
     orientation(newp,pol1);
@@ -93,7 +93,7 @@ vector<Segment_2> red_edges(Points points, Polygon_2 pol){
     return red_edges;
 }
 
-vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
+vector<Segment_2> visible_edges(Segment_2 red, Polygon_2D pol, Points points){
     vector<Segment_2> visible;
     vector<Segment_2> pol_edges;
     for(const Segment_2& e  : pol.edges())
@@ -194,12 +194,12 @@ Segment_2 random_selection(vector<Segment_2> visible){
     return edge;
 }
 
-Segment_2 minimum_area(vector<Segment_2> visible, Polygon_2 pol, Points points){
+Segment_2 minimum_area(vector<Segment_2> visible, Polygon_2D pol, Points points){
     vector<double> areas;
     vector<Segment_2> edges;
     
     for(Segment_2 e: visible){
-        Polygon_2 pol1 = pol;
+        Polygon_2D pol1 = pol;
         VertexIterator it;
         for(it = pol1.vertices_begin(); it != pol1.vertices_end(); it++){
             if(it->x() == e.point(1).x() && it->y() == e.point(1).y()){
@@ -221,12 +221,12 @@ Segment_2 minimum_area(vector<Segment_2> visible, Polygon_2 pol, Points points){
     return min_edge;
 }
 
-Segment_2 maximum_area(vector<Segment_2> visible, Polygon_2 pol, Points points){
+Segment_2 maximum_area(vector<Segment_2> visible, Polygon_2D pol, Points points){
     vector<double> areas;
     vector<Segment_2> edges;
     
     for(Segment_2 e: visible){
-        Polygon_2 pol1 = pol;
+        Polygon_2D pol1 = pol;
         VertexIterator it;
         for(it = pol1.vertices_begin(); it != pol1.vertices_end(); it++){
             if(it->x() == e.point(1).x() && it->y() == e.point(1).y()){
@@ -250,7 +250,7 @@ Segment_2 maximum_area(vector<Segment_2> visible, Polygon_2 pol, Points points){
 
 double incremental(Points points, int edge_selection, string initialization){
     srand(time(NULL));
-    Polygon_2 pol;
+    Polygon_2D pol;
     sorting(points, initialization);
 
     //Building initial triangle
@@ -266,7 +266,7 @@ double incremental(Points points, int edge_selection, string initialization){
         //finding red edges
         vector<Segment_2> red = red_edges(points, pol);
 
-        Polygon_2 KP;
+        Polygon_2D KP;
         CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
 
         orientation(KP,pol);
@@ -311,7 +311,7 @@ double incremental(Points points, int edge_selection, string initialization){
         cout<<*it<<endl;
     }
 
-    Polygon_2 KP;
+    Polygon_2D KP;
     CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
 
     cout<<"ratio: "<< pol.area()/KP.area() <<endl;

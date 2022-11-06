@@ -6,9 +6,10 @@
 #include <CGAL/property_map.h>
 #include <iostream>
 #include <fstream>
-#include "utils.hpp"
 #include <random>
 #include <time.h>
+
+using std::string;
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef K::Point_2 Point_2;

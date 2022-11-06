@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/ioanna/algorithmic-problems
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,32 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named cgal_check_build_system
-
-# Build rule for target.
-cgal_check_build_system: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 cgal_check_build_system
-.PHONY : cgal_check_build_system
-
-# fast build rule for target.
-cgal_check_build_system/fast:
-	$(MAKE) -f CMakeFiles/cgal_check_build_system.dir/build.make CMakeFiles/cgal_check_build_system.dir/build
-.PHONY : cgal_check_build_system/fast
-
-#=============================================================================
-# Target rules for targets named ALL_CGAL_TARGETS
-
-# Build rule for target.
-ALL_CGAL_TARGETS: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ALL_CGAL_TARGETS
-.PHONY : ALL_CGAL_TARGETS
-
-# fast build rule for target.
-ALL_CGAL_TARGETS/fast:
-	$(MAKE) -f CMakeFiles/ALL_CGAL_TARGETS.dir/build.make CMakeFiles/ALL_CGAL_TARGETS.dir/build
-.PHONY : ALL_CGAL_TARGETS/fast
-
-#=============================================================================
 # Target rules for targets named main
 
 # Build rule for target.
@@ -148,6 +122,33 @@ main: cmake_check_build_system
 main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
+
+incremental.o: incremental.cpp.o
+
+.PHONY : incremental.o
+
+# target to build an object file
+incremental.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/incremental.cpp.o
+.PHONY : incremental.cpp.o
+
+incremental.i: incremental.cpp.i
+
+.PHONY : incremental.i
+
+# target to preprocess a source file
+incremental.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/incremental.cpp.i
+.PHONY : incremental.cpp.i
+
+incremental.s: incremental.cpp.s
+
+.PHONY : incremental.s
+
+# target to generate assembly for a file
+incremental.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/incremental.cpp.s
+.PHONY : incremental.cpp.s
 
 main.o: main.cpp.o
 
@@ -182,11 +183,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... cgal_check_build_system"
-	@echo "... ALL_CGAL_TARGETS"
+	@echo "... edit_cache"
 	@echo "... main"
+	@echo "... incremental.o"
+	@echo "... incremental.i"
+	@echo "... incremental.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
