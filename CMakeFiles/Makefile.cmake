@@ -48,8 +48,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-3.16/Modules/CMakeSystemSpecificInformation.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeSystemSpecificInitialize.cmake"
   "/usr/share/cmake-3.16/Modules/CheckCSourceCompiles.cmake"
-  "/usr/share/cmake-3.16/Modules/CheckForPthreads.c"
-  "/usr/share/cmake-3.16/Modules/CheckIncludeFile.c.in"
   "/usr/share/cmake-3.16/Modules/CheckIncludeFile.cmake"
   "/usr/share/cmake-3.16/Modules/CheckLibraryExists.cmake"
   "/usr/share/cmake-3.16/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
@@ -81,7 +79,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/cgal_check_build_system.dir/DependInfo.cmake"
-  "CMakeFiles/ALL_CGAL_TARGETS.dir/DependInfo.cmake"
   "CMakeFiles/main.dir/DependInfo.cmake"
   )
