@@ -423,6 +423,11 @@ long double convex_hull( vector<Point_2> points, int edge_selection){
 
     long double area = polygon.area();
 
+    Polygon_2 KP;
+    CGAL::convex_hull_2(polygon.begin(), polygon.end(), std::back_inserter(KP));
+
+    cout<<"ratio: "<< area/KP.area() <<endl;
+
     return area;
 
 }
