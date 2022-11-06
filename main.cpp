@@ -4,7 +4,6 @@
 #include <iostream>
 #include <fstream>
 #include <time.h>
-#include "convex_hull_algorithmic.hpp"
 #include "incremental.hpp"
 
 using namespace std;
