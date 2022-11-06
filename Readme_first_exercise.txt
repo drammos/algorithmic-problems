@@ -165,13 +165,16 @@
     
     -./main -i paris-0000500.instance -o output -algorithm incremental -edge_selection 1 -initialization 1a
     Αποτέλεσμα:
-    ratio: -0.512959
-    area: -1.52653e+08
-    construction time: 74596
+    ratio: 0.695149
+    area: 2.06872e+08
+    construction time: 823826
     
     -./main -i paris-0000500.instance -o output -algorithm convex_hull -edge_selection 1
+    Αποτελέσματα:
     ratio: 0.479216
     area: 1.42612e+08
     construction time: 494136
+    
+    
     
     Τα αρχεία που δοκιμάζονται παραπάνω είναι αναρτημένα στο eclass του μαθήματος.
