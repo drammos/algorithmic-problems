@@ -129,3 +129,49 @@
         το εμβαδον μεγιστοποιηται της ακμης και του κοντινοτερου εσωτερικου σημειου που επιλεκτηκε.
 
     Στο convex_hull επιστρεφεται το polygon για το οποιο υπολογιζεται το εμβαδον του, το οποιο επιστρεφεται στο main-function.
+    
+Παραδείγματα εκτελέσεων:
+
+    -./main -i euro-night-0000100.instance -o output -algorithm convex_hull -edge_selection 3
+    Αποτέλεσμα:
+    ratio: 0.244309
+    area: 1.84411e+07
+    construction time: 95405
+    
+    -./main -i euro-night-0000100.instance -o output -algorithm incremental -edge_selection 3 -initialization 1a
+    Αποτέλεσμα:
+    ratio: 0.766575
+    area: 5.78632e+07
+    construction time: 20683
+    
+    -./main -i euro-night-0001000.instance -o output -algorithm convex_hull -edge_selection 3
+    Αποτέλεσμα:
+    ratio: 0.190247
+    area: 1.64067e+07
+    construction time: 563850463
+    
+    -./main -i euro-night-0005000.instance -o output -algorithm incremental -edge_selection 3 -initialization 1a
+    Αποτέλεσμα:
+    ratio: -0.180341
+    area: -6.34659e+07
+    construction time: 9873322
+    (Το εμβαδόν σε αυτή την περίπτωση δεν χωράει σε long double)
+    
+    -./main -i euro-night-0001000.instance -o output -algorithm incremental -edge_selection 1 -initialization 1a
+    Αποτέλεσμα:
+    ratio: 0.45091
+    area: 3.8886e+07
+    construction time: 333222
+    
+    -./main -i paris-0000500.instance -o output -algorithm incremental -edge_selection 1 -initialization 1a
+    Αποτέλεσμα:
+    ratio: -0.512959
+    area: -1.52653e+08
+    construction time: 74596
+    
+    -./main -i paris-0000500.instance -o output -algorithm convex_hull -edge_selection 1
+    ratio: 0.479216
+    area: 1.42612e+08
+    construction time: 494136
+    
+    Τα αρχεία που δοκιμάζονται παραπάνω είναι αναρτημένα στο eclass του μαθήματος.
