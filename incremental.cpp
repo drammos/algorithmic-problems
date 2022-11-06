@@ -1,20 +1,3 @@
-// #include <CGAL/convex_hull_2.h>
-// #include <CGAL/Polygon_2.h>
-// #include <CGAL/Convex_hull_traits_adapter_2.h>
-// #include <CGAL/Circular_kernel_intersections.h>
-// #include <CGAL/property_map.h>
-// #include <iostream>
-// #include <fstream>
-// #include <random>
-// #include <time.h>
-
-// typedef K::Point_2 Point_2;
-// typedef K::Segment_2 Segment_2;
-// typedef std::vector<Point_2> Points;
-// typedef CGAL::Polygon_2 <K> Polygon_2D;
-// typedef CGAL::Line_2 <K> Line_2D;
-// typedef Polygon_2D::Edge_const_iterator EdgeIterator;
-// typedef Polygon_2D::Vertex_iterator VertexIterator;
 #include "incremental.hpp"
 
 using namespace std;
@@ -47,16 +30,15 @@ bool compare_2b(Point_2 point1, Point_2 point2){
         return (point1.x() > point2.x());
 }
 
-void orientation(Polygon_2& PK, Polygon_2& pol){
-    if((pol.is_clockwise_oriented() && !PK.is_clockwise_oriented()) || (!pol.is_clockwise_oriented() && PK.is_clockwise_oriented())){
-        cout<<"reverse"<<endl;
-        PK.reverse_orientation();
+//if KP and polygon have different orientation, KP is reversed
+void orientation(Polygon_2& KP, Polygon_2& pol){
+    if((pol.is_clockwise_oriented() && !KP.is_clockwise_oriented()) || (!pol.is_clockwise_oriented() && KP.is_clockwise_oriented())){
+        KP.reverse_orientation();
     }
 }
 
 void sorting(Points& points, string init){
     if(!init.compare("1a")){
-        cout<<"here\n";
         sort(points.begin(), points.end(), compare_1a);
     }
     else if(!init.compare("1b")){
@@ -68,7 +50,6 @@ void sorting(Points& points, string init){
     else{
         sort(points.begin(), points.end(), compare_2b);
     }
-    cout << "Points sorted: " << endl;
 
     for(int i=0; i < points.size(); i++){
         cout << points.at(i) << endl;
@@ -77,7 +58,7 @@ void sorting(Points& points, string init){
 
 vector<Segment_2> red_edges(Points points, Polygon_2 pol){
     Polygon_2 old;
-
+    //current convex hull
     CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(old));
 
     orientation(old,pol);
@@ -85,14 +66,11 @@ vector<Segment_2> red_edges(Points points, Polygon_2 pol){
     vector<Segment_2> edges;
     for(const Segment_2& e  : old.edges())
         edges.push_back(e);
-
-    cout<<"Edges:"<<endl;
-    for(int i=0; i < edges.size(); i++)
-        cout << edges.at(i) << endl;
         
     Polygon_2 pol1 = pol;
     pol1.push_back(points.at(0));
 
+    //convex hull after new vertice
     Polygon_2 newp;
     CGAL::convex_hull_2(pol1.begin(), pol1.end(), std::back_inserter(newp));
 
@@ -102,11 +80,7 @@ vector<Segment_2> red_edges(Points points, Polygon_2 pol){
     for(const Segment_2& e  : newp.edges())
         edges_new.push_back(e);
 
-
-    cout<<"New edges:"<<endl;
-    for(int i=0; i < edges_new.size(); i++)
-        cout << edges_new.at(i) << endl;
-
+    //red edges are the edges that are included in the old convex hull but not in the new.
     std::vector<Segment_2>::iterator it;
     vector<Segment_2> red_edges;
     for(const Segment_2& e  : edges){
@@ -114,12 +88,6 @@ vector<Segment_2> red_edges(Points points, Polygon_2 pol){
         if(it == edges_new.end()){
             red_edges.push_back(e);
         }
-    }
-    // points.erase(points.begin());
-    cout<<"Red edges:"<<endl;
-
-    for(int i=0; i < red_edges.size(); i++){
-        cout << red_edges.at(i) << endl;
     }
 
     return red_edges;
@@ -134,22 +102,23 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
     std::vector<Segment_2>::iterator it;
     it = find(pol_edges.begin(), pol_edges.end(), red);
 
+    //if the red edge is an edge of the polygon
     if(it != pol_edges.end()){
+
         Point_2 to_add = points[0];
         Segment_2 seg1(to_add, it->point(0));
         Segment_2 seg2(to_add, it->point(1));
+
+        //if the new point is on the same line as the start or the end point of the edge, this edge is not visible. 
         const auto result = CGAL::intersection(seg1, seg2);
         if (const Segment_2* s = boost::get<Segment_2>(&*result)) {
-            std::cout <<"s"<< *s << std::endl;
             return visible;
         }
+
         visible.push_back(red);
-        cout<<"Visible edges1:"<<endl;
-        for(int i=0; i < visible.size(); i++){
-            cout << visible.at(i) << endl;
-        }
         return visible;
     }
+    //if the red edge is not part of the polygon
     else{
         Point_2 first = red.point(0);
         Point_2 second = red.point(1);
@@ -157,9 +126,9 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
 
         EdgeIterator it = pol.edges_begin();
         while( it != pol.edges_end()){
-
+            //finding the first edge behind the red edge
             if(it->point(0) == first || in_red){
-                cout<<"edge-"<<*it<<endl;
+
                 in_red = true;
                 Point_2 to_add = points[0];
                 Segment_2 seg1(to_add, it->point(0));
@@ -170,26 +139,26 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
 
                 EdgeIterator it1;
                 for(it1 = pol.edges_begin(); it1 != pol.edges_end(); it1++){
+                    //if the new point is on the same line as the start or the end point of the edge, this edge is not visible. 
                     const auto result = CGAL::intersection(seg1, seg2);
                     if (const Segment_2* s = boost::get<Segment_2>(&*result)) {
-                        std::cout <<"s"<< *s << std::endl;
                         break;
                     }
                     
                     if(it1 != it){
+                        //if seg1 intersects with any edge except the previous one, the the edge it is not visible;
                         if(it1 != it-1 && CGAL::do_intersect(seg1, *it1)){
                             const auto result = CGAL::intersection(seg1, *it1);
                             const Point_2* p = boost::get<Point_2 >(&*result);
                             if(p->x() != it->point(0).x() || p->y() != it->point(0).y()){
-                                cout<<"1intersects with "<<*it1<<endl;
                                 break;
                             }
                         }
+                        //if seg2 intersects with any edge except the next one, the the edge it is not visible;
                         if(it1 != it+1 && CGAL::do_intersect(seg2, *it1)){
                             const auto result = CGAL::intersection(seg2, *it1);
                             const Point_2* p = boost::get<Point_2 >(&*result);
                             if(p->x() != it->point(1).x() || p->y() != it->point(1).y()){
-                                cout<<"2intersects with "<<*it1<<endl;
                                 break;
                             }
                         }
@@ -199,35 +168,89 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2 pol, Points points){
                     }
                 }
                 if(it1 == pol.edges_end()){
-                    cout<<"end"<<endl;
                     visible.push_back(*it);
 
                 }
             }
-            
+            //finding the last edge behind the red edge.
             if(it->point(1) == second && in_red){
-                cout<<"second"<<endl;
                 in_red = false;
                 break;
             }
             it++;
             if(it == pol.edges_end() && in_red && it->point(1) != second){
-                cout<<"here"<<endl;
                 it = pol.edges_begin();
             }
-        }
-        cout<<"Visible edges:"<<endl;
-        for(int i=0; i < visible.size(); i++){
-            cout << visible.at(i) << endl;
         }
         return visible;
     }
 }
 
-int incremental(Points points, int edge_selection, string initialization){
+//functions for edge selection
+
+Segment_2 random_selection(vector<Segment_2> visible){
+    int random = rand() % visible.size();
+    Segment_2 edge = visible[random];
+    return edge;
+}
+
+Segment_2 minimum_area(vector<Segment_2> visible, Polygon_2 pol, Points points){
+    vector<double> areas;
+    vector<Segment_2> edges;
+    
+    for(Segment_2 e: visible){
+        Polygon_2 pol1 = pol;
+        VertexIterator it;
+        for(it = pol1.vertices_begin(); it != pol1.vertices_end(); it++){
+            if(it->x() == e.point(1).x() && it->y() == e.point(1).y()){
+                break;
+            }
+        }
+        pol1.insert(it, points[0]);
+        areas.push_back(pol1.area());
+        edges.push_back(e);
+    }
+    double min = areas[0];
+    Segment_2 min_edge = edges[0];
+    for(int i = 1; i < areas.size(); i++){
+        if(areas.at(i) < min){
+            min = areas.at(i);
+            min_edge = edges.at(i);
+        }
+    }
+    return min_edge;
+}
+
+Segment_2 maximum_area(vector<Segment_2> visible, Polygon_2 pol, Points points){
+    vector<double> areas;
+    vector<Segment_2> edges;
+    
+    for(Segment_2 e: visible){
+        Polygon_2 pol1 = pol;
+        VertexIterator it;
+        for(it = pol1.vertices_begin(); it != pol1.vertices_end(); it++){
+            if(it->x() == e.point(1).x() && it->y() == e.point(1).y()){
+                break;
+            }
+        }
+        pol1.insert(it, points[0]);
+        areas.push_back(pol1.area());
+        edges.push_back(e);
+    }
+    double max = areas[0];
+    Segment_2 max_edge = edges[0];
+    for(int i = 1; i < areas.size(); i++){
+        if(areas.at(i) > max){
+            max = areas.at(i);
+            max_edge = edges.at(i);
+        }
+    }
+    return max_edge;
+}
+
+double incremental(Points points, int edge_selection, string initialization){
     srand(time(NULL));
     Polygon_2 pol;
-    // Points points = input_handling("euro-night-0005000.instance", "1a");
     sorting(points, initialization);
 
     //Building initial triangle
@@ -235,37 +258,40 @@ int incremental(Points points, int edge_selection, string initialization){
     pol.push_back(points.at(1));
     pol.push_back(points.at(2));
 
-    vector<Segment_2> edges_new;
-    for(const Segment_2& e  : pol.edges())
-        edges_new.push_back(e);
-    cout<<"Polygon:"<<endl;
-    for(int i=0; i < edges_new.size(); i++)
-        cout << edges_new.at(i) << endl;
-
-
     points.erase(points.begin());
     points.erase(points.begin());
     points.erase(points.begin());
 
     while(points.size() > 0){
+        //finding red edges
         vector<Segment_2> red = red_edges(points, pol);
 
-        Polygon_2 PK;
-        CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(PK));
+        Polygon_2 KP;
+        CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
 
-        orientation(PK,pol);
+        orientation(KP,pol);
 
+        //finding visible edges
         vector<Segment_2> visible;
         for(const Segment_2& e  : red){
             vector<Segment_2> visible1 = visible_edges(e, pol, points);
             for(const Segment_2& e  : visible1)
-                visible.push_back(e);
-
-           
+                visible.push_back(e); 
         }
-        int random = rand() % visible.size();
-        Segment_2 edge = visible[random];
         
+        //edge selection
+        Segment_2 edge;
+        if(edge_selection == 1){
+            edge = random_selection(visible);
+        }
+        else if(edge_selection == 2){
+            edge = minimum_area(visible, pol, points);
+        }
+        else{
+            edge = maximum_area(visible, pol, points);
+        }
+        
+        //finding the selected visible edge
         VertexIterator it;
         for(it = pol.vertices_begin(); it != pol.vertices_end(); it++){
             if(it->x() == edge.point(1).x() && it->y() == edge.point(1).y()){
@@ -278,17 +304,12 @@ int incremental(Points points, int edge_selection, string initialization){
         for(const Segment_2& e  : pol.edges())
             edges_new.push_back(e);
 
-        cout<<"Polygon:"<<endl;
-        for(int i=0; i < edges_new.size(); i++)
-            cout << edges_new.at(i) << endl;
-
-        if(pol.is_simple() == false){
-            cout<<"Not simple"<<endl;
-            return -1;
-        }
-
         points.erase(points.begin());
     }
+
+    for(EdgeIterator it = pol.edges_begin(); it != pol.edges_end(); it++){
+        cout<<*it<<endl;
+    }
     cout<<pol.is_simple()<<endl;
-    return 0;
+    return pol.area();
 }

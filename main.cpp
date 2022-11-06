@@ -38,6 +38,7 @@ int main(int argc, char* argv[]){
     int edge_selection = atoi(argv[8]);
     if(edge_selection!=1 && edge_selection!=2 && edge_selection!=3){
         cout<<"Invalid edge selection number"<<endl;
+        return -1;
     }
 
     string init;
@@ -84,15 +85,22 @@ int main(int argc, char* argv[]){
     
     // Start the time
     int time_start = clock();
-    double area;
+    long double area;
 
+    cout<<"Polygonization"<<endl;
     if( algorithm.compare("convex_hull") == 0){
-        area = convex_hull(points, edge_selection);
+        cout<<"convex hull"<<endl;
     }
     else{
-        incremental(points, edge_selection, init);
+        area = incremental(points, edge_selection, init);
     }
-
+    cout<<"Algorithm: "<<algorithm<<"_edge_selection: "<<edge_selection;
+    if(!algorithm.compare("incremental")){
+        cout<<"_initialization: "<<init<<endl;
+    }
+    else{
+        cout<<endl;
+    }
     int time_end = clock();
     
     int time = time_end - time_start;

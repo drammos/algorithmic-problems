@@ -27,4 +27,4 @@ bool compare_2b(Point_2 point1, Point_2 point2);
 void orientation(Polygon_2& PK, Polygon_2& pol);
 Points input_handling(string input, char* sorting);
 
-int incremental(Points, int, string);
+double incremental(Points, int, string);
