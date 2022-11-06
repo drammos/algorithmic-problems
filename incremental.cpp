@@ -108,6 +108,18 @@ vector<Segment_2> visible_edges(Segment_2 red, Polygon_2D pol, Points points){
         Point_2 to_add = points[0];
         Segment_2 seg1(to_add, it->point(0));
         Segment_2 seg2(to_add, it->point(1));
+        Point_2 midPoint = CGAL::midpoint(it->point(0), it->point(1)); 
+        Segment_2 mid_seg(to_add, midPoint);
+
+        EdgeIterator it1;
+        for(it1 = pol.edges_begin(); it1 != pol.edges_end(); it1++){
+            if( it1->point(0) != red.point(0) || it1->point(1) != red.point(1)){
+                if(CGAL::do_intersect(mid_seg, *it1)){
+                    return visible;
+                }
+
+            }
+        }  
 
         //if the new point is on the same line as the start or the end point of the edge, this edge is not visible. 
         const auto result = CGAL::intersection(seg1, seg2);
@@ -275,6 +287,7 @@ long double incremental(Points points, int edge_selection, string initialization
         vector<Segment_2> visible;
         for(const Segment_2& e  : red){
             vector<Segment_2> visible1 = visible_edges(e, pol, points);
+
             for(const Segment_2& e  : visible1)
                 visible.push_back(e); 
         }
