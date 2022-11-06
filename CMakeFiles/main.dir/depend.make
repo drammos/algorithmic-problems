@@ -595,5 +595,9 @@ CMakeFiles/main.dir/incremental.cpp.o: /home/ioanna/CGAL-5.5.1/include/CGAL/vers
 CMakeFiles/main.dir/incremental.cpp.o: /home/ioanna/CGAL-5.5.1/include/CGAL/wmult.h
 CMakeFiles/main.dir/incremental.cpp.o: incremental.cpp
 CMakeFiles/main.dir/incremental.cpp.o: incremental.hpp
+<<<<<<< HEAD
+=======
+CMakeFiles/main.dir/incremental.cpp.o: utils.hpp
+>>>>>>> 429f4a311b61f65cd2948475a63ec5e0930a362e
 
 

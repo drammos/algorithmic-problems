@@ -596,4 +596,8 @@ CMakeFiles/main.dir/incremental.cpp.o
  /home/ioanna/CGAL-5.5.1/include/CGAL/wmult.h
  /home/ioanna/algorithmic-problems/incremental.cpp
  /home/ioanna/algorithmic-problems/incremental.hpp
+<<<<<<< HEAD
+=======
+ /home/ioanna/algorithmic-problems/utils.hpp
+>>>>>>> 429f4a311b61f65cd2948475a63ec5e0930a362e
 CMakeFiles/main.dir/main.cpp.o
