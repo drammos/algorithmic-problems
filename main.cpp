@@ -94,9 +94,9 @@ int main(int argc, char* argv[]){
     else{
         area = incremental(points, edge_selection, init);
     }
-    cout<<"Algorithm: "<<algorithm<<"_edge_selection: "<<edge_selection;
+    cout<<"Algorithm: "<<algorithm<<" edge_selection: "<<edge_selection;
     if(!algorithm.compare("incremental")){
-        cout<<"_initialization: "<<init<<endl;
+        cout<<" initialization: "<<init<<endl;
     }
     else{
         cout<<endl;

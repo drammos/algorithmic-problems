@@ -310,6 +310,11 @@ double incremental(Points points, int edge_selection, string initialization){
     for(EdgeIterator it = pol.edges_begin(); it != pol.edges_end(); it++){
         cout<<*it<<endl;
     }
+
+    Polygon_2 KP;
+    CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
+
+    cout<<"ratio: "<< pol.area()/KP.area() <<endl;
     cout<<pol.is_simple()<<endl;
     return pol.area();
 }
