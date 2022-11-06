@@ -3,7 +3,12 @@
         {
             "name": "Linux",
             "includePath": [
+<<<<<<< HEAD
                 "${workspaceFolder}/**"
+=======
+                "${workspaceFolder}/**",
+                "${workspaceFolder}"
+>>>>>>> first-exercise
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/dr/algorithmic-problems
+CMAKE_SOURCE_DIR = /home/ioanna/algorithmic-problems
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/dr/algorithmic-problems
+CMAKE_BINARY_DIR = /home/ioanna/algorithmic-problems
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dr/algorithmic-problems/CMakeFiles /home/dr/algorithmic-problems/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ioanna/algorithmic-problems/CMakeFiles /home/ioanna/algorithmic-problems/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dr/algorithmic-problems/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ioanna/algorithmic-problems/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -150,6 +150,33 @@ convex_hull_algorithmic.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/convex_hull_algorithmic.cpp.s
 .PHONY : convex_hull_algorithmic.cpp.s
 
+incremental.o: incremental.cpp.o
+
+.PHONY : incremental.o
+
+# target to build an object file
+incremental.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/incremental.cpp.o
+.PHONY : incremental.cpp.o
+
+incremental.i: incremental.cpp.i
+
+.PHONY : incremental.i
+
+# target to preprocess a source file
+incremental.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/incremental.cpp.i
+.PHONY : incremental.cpp.i
+
+incremental.s: incremental.cpp.s
+
+.PHONY : incremental.s
+
+# target to generate assembly for a file
+incremental.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/incremental.cpp.s
+.PHONY : incremental.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -189,6 +216,9 @@ help:
 	@echo "... convex_hull_algorithmic.o"
 	@echo "... convex_hull_algorithmic.i"
 	@echo "... convex_hull_algorithmic.s"
+	@echo "... incremental.o"
+	@echo "... incremental.i"
+	@echo "... incremental.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

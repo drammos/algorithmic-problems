@@ -410,7 +410,6 @@ long double convex_hull( vector<Point_2> points, int edge_selection){
     else{
         polygon = max_area(internal_points, polygon);
     }
-    std::cout << "Polyganization:\n";
 
     // Take the vertices from polyhon
     for(const Point_2& point : polygon.vertices()){
@@ -419,16 +418,10 @@ long double convex_hull( vector<Point_2> points, int edge_selection){
     
     // Take the edges from polygon
     for(const Segment_2& edge  : polygon.edges()){
-        std::cout << "Edge  " << edge << std::endl;
+        std::cout<< edge << std::endl;
     }
 
-    cout << "Algorithmic: convex_hull" << endl;
-    
-    cout << "edge_selection: " << edge_selection << endl;
-
     long double area = polygon.area();
-    cout << "Polygon is simple:     "<< polygon.is_simple() << endl;
-
 
     return area;
 

@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "cmake.configureOnOpen": true,
     "files.associations": {
         "iostream": "cpp",
@@ -65,5 +66,10 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp"
+=======
+    "files.associations": {
+        "ostream": "cpp",
+        "iostream": "cpp"
+>>>>>>> first-exercise
     }
 }
