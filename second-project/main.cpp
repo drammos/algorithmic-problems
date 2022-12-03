@@ -1,49 +1,15 @@
-
-////////////////////////////////
-//                            // 
-//          main.cpp          // 
-//                            //
-////////////////////////////////
-
-
-#include <time.h>
-#include "convex_hull_algorithmic.hpp"
-#include "incremental.hpp"
-
-using namespace std;
-
-// ./main -i file -o outfile -algorithm convex_hull -edge_selection 1
+#include "../first-project/incremental.hpp"
+#include "../first-project/convex_hull_algorithmic.hpp"
+#include "../first-project/to_polygon.hpp"
+#include "local_search.hpp"
 
 int main(int argc, char* argv[]){
-    if(argc < 9){
+    if(argc < 12){
         cout<<"Not enough arguments\n";
         return -1;
     }
-
     string filename = argv[2];
     string output_file = argv[4];
-
-    string algorithm = argv[6];
-    if(algorithm.compare("incremental") && algorithm.compare("convex_hull")){
-        cout<<"Ivalid algorithm"<<endl;
-        return -1;
-    }
-
-    int edge_selection = atoi(argv[8]);
-    if(edge_selection!=1 && edge_selection!=2 && edge_selection!=3){
-        cout<<"Invalid edge selection number"<<endl;
-        return -1;
-    }
-
-    string init;
-    if(argc == 11){
-        init = argv[10];
-
-        if(init.compare("1a") && init.compare("1b") && init.compare("2a") && init.compare("2b")){
-            cout<<"Ivalid initialization string"<<endl;
-            return -1;
-        }
-    }
 
     // Cout in file
     ofstream cout(output_file);
@@ -76,12 +42,17 @@ int main(int argc, char* argv[]){
 
     // Close the file
     input_file.close();
+
+    int edge_selection = 1;
     
     // Start the time
     int time_start = clock();
     Polygon_2D pol;
 
     cout<<"Polygonization"<<endl;
+
+    string algorithm = "incremental";
+    string init = "1a";
 
     if( algorithm.compare("convex_hull") == 0){
         pol = convex_hull(points, edge_selection);
@@ -104,5 +75,22 @@ int main(int argc, char* argv[]){
 
     cout << "construction time: " << time << endl;
 
-    return 0;               
+    string algorithm_2 = argv[6];
+    int L = atoi(argv[8]);
+    string min_max = argv[9];
+    double threshold = atof(argv[11]);
+
+    string annealing;
+    if(algorithm_2.compare("simulated_annealing")){
+        if(argc < 14){
+            cout<<"Not enough arguments\n";
+            return -1;
+        }
+        annealing = argv[13];
+    }
+    else if(algorithm_2.compare("local_search")){
+        local_search(pol, L, min_max, threshold);
+    }
+    
+    return 0;
 }
