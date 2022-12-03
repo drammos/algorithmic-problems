@@ -9,17 +9,22 @@ list<vector<Segment_2>> find_paths(vector<Segment_2> edges, int L){
         for(int i = first_edge; i < L+first_edge; i++){
             vector<Segment_2> path;
             int j = first_edge;
+            int k = j;
             while(j <= i){
                 if(j >= edges.size()){
-                    j = 0;
+                    k = 0;
                 }
-                path.push_back(edges.at(j));
+                path.push_back(edges.at(k));
+
                 j++;
+                k++;
             }
-            first_edge++;
             paths.push_back(path);
+            
         }
+        first_edge++;
     }
+
     return paths;
 }
 
@@ -30,7 +35,7 @@ Polygon_2D change_path(vector<Segment_2> path, Segment_2 edge, Polygon_2D pol){
             for(int i = 1; i< path.size(); i++){
                 VertexIterator vit = pol.vertices_begin();
                 while(vit != pol.vertices_end()){
-                    if(vit->x() == path.at(i).point(1).x() && vit->y() == path.at(i).point(1).y()){
+                    if(vit->x() == path.at(i).point(0).x() && vit->y() == path.at(i).point(0).y()){
                         pol.erase(vit);
                         break;
                     }
@@ -64,6 +69,7 @@ Polygon_2D change_path(vector<Segment_2> path, Segment_2 edge, Polygon_2D pol){
             break;
         }
     }
+
     return pol;
 }
 
@@ -71,7 +77,6 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold)
 
     if(L >= pol.edges().size()){
         perror("L is too high");
-        return;
     }
 
     double dif = threshold;
@@ -88,8 +93,9 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold)
         for(vector<Segment_2> path: paths){
             vector<Polygon_2D> alternatives;
 
-            for(Segment_2 edge: pol.edges()){
+            for(Segment_2 edge: best.edges()){
                 Polygon_2D new_pol = change_path(path, edge, best);
+                cout<<"here"<<endl;
 
                 if(new_pol.is_simple()){
                     double area1 = best.area();
@@ -141,6 +147,12 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold)
             }
         }
         dif = best.area() - pol.area();
+    }
+    for(VertexIterator vit = best.vertices_begin(); vit != best.vertices_end(); vit++){
+        cout<<vit->x()<<" "<< vit->y()<<endl;
+    }
+    for(EdgeIterator eit = best.edges_begin(); eit != best.edges_end(); eit++){
+        cout<<*eit<<endl;
     }
     return best;
 }

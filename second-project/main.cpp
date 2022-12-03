@@ -1,5 +1,5 @@
-#include "../first-project/incremental.hpp"
-#include "../first-project/convex_hull_algorithmic.hpp"
+#include "incremental.hpp"
+#include "convex_hull_algorithmic.hpp"
 #include "../first-project/to_polygon.hpp"
 #include "local_search.hpp"
 
@@ -81,15 +81,15 @@ int main(int argc, char* argv[]){
     double threshold = atof(argv[11]);
 
     string annealing;
-    if(algorithm_2.compare("simulated_annealing")){
+    if(!algorithm_2.compare("simulated_annealing")){
         if(argc < 14){
             cout<<"Not enough arguments\n";
             return -1;
         }
         annealing = argv[13];
     }
-    else if(algorithm_2.compare("local_search")){
-        local_search(pol, L, min_max, threshold);
+    else if(!algorithm_2.compare("local_search")){
+        Polygon_2D new_pol = local_search(pol, L, min_max, threshold);
     }
     
     return 0;
