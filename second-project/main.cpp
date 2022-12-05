@@ -49,9 +49,9 @@ int main(int argc, char* argv[]){
     int time_start = clock();
     Polygon_2D pol;
 
-    cout<<"Polygonization"<<endl;
+    cout<<"Optimal Area Polygonization"<<endl;
 
-    string algorithm = "incremental";
+    string algorithm = "convex_hull";
     string init = "1a";
 
     if( algorithm.compare("convex_hull") == 0){
@@ -60,26 +60,22 @@ int main(int argc, char* argv[]){
     else{
         pol = incremental(points, edge_selection, init);
     }
-    cout<<"Algorithm: "<<algorithm<<" edge_selection: "<<edge_selection;
 
-    if(!algorithm.compare("incremental")){
-        cout<<" initialization: "<<init<<endl;
-    }
-    else{
-        cout<<endl;
-    }
-    int time_end = clock();
-    
-    int time = time_end - time_start;
-    cout << "area: " << pol.area() << endl;
+    Polygon_2D KP;
+    CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
+    double ratio_initial = pol.area()/KP.area();
 
-    cout << "construction time: " << time << endl;
-
-    string algorithm_2 = argv[6];
     int L = atoi(argv[8]);
     string min_max = argv[9];
     double threshold = atof(argv[11]);
 
+    string algorithm_2 = argv[6];
+    cout<<"Algorithm: "<<algorithm_2<<"_"<<min_max<<endl;
+
+    cout<<"area_initial:"<<pol.area()<<endl;
+
+    
+    Polygon_2D new_pol;
     string annealing;
     if(!algorithm_2.compare("simulated_annealing")){
         if(argc < 14){
@@ -89,8 +85,20 @@ int main(int argc, char* argv[]){
         annealing = argv[13];
     }
     else if(!algorithm_2.compare("local_search")){
-        Polygon_2D new_pol = local_search(pol, L, min_max, threshold);
+        new_pol = local_search(pol, L, min_max, threshold);
     }
     
+    cout<<"area:"<<new_pol.area()<<endl;
+
+    cout<<"ratio_initial:"<<ratio_initial<<endl;
+
+    Polygon_2D KP1;
+    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
+
+    cout<<"ratio:"<<new_pol.area()/KP1.area()<<endl;
+
+    int time_end = clock();
+    int time = time_end - time_start;
+    cout << "construction time: " << time << endl;
     return 0;
 }

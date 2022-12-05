@@ -52,9 +52,9 @@ void sorting(Points& points, string init){
         sort(points.begin(), points.end(), compare_2b);
     }
 
-    for(int i=0; i < points.size(); i++){
-        cout << points.at(i) << endl;
-    }
+    // for(int i=0; i < points.size(); i++){
+    //     cout << points.at(i) << endl;
+    // }
 }
 
 vector<Segment_2> red_edges(Points points, Polygon_2D pol){
@@ -323,13 +323,13 @@ Polygon_2D incremental(Points points, int edge_selection, string initialization)
         points.erase(points.begin());
     }
 
-    for(EdgeIterator it = pol.edges_begin(); it != pol.edges_end(); it++){
-        cout<<*it<<endl;
-    }
+    // for(EdgeIterator it = pol.edges_begin(); it != pol.edges_end(); it++){
+    //     cout<<*it<<endl;
+    // }
 
     Polygon_2D KP;
     CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
-    cout<<pol.is_simple()<<endl;
-    cout<<"ratio: "<< pol.area()/KP.area() <<endl;
+    // cout<<pol.is_simple()<<endl;
+    // cout<<"ratio: "<< pol.area()/KP.area() <<endl;
     return pol;
 }

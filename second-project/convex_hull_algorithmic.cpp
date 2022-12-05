@@ -412,21 +412,21 @@ Polygon_2 convex_hull( vector<Point_2> points, int edge_selection){
     }
 
     // Take the vertices from polyhon
-    for(const Point_2& point : polygon.vertices()){
-        std::cout << point << std::endl;
-    }
+    // for(const Point_2& point : polygon.vertices()){
+    //     std::cout << point << std::endl;
+    // }
     
     // Take the edges from polygon
-    for(const Segment_2& edge  : polygon.edges()){
-        std::cout<< edge << std::endl;
-    }
+    // for(const Segment_2& edge  : polygon.edges()){
+    //     std::cout<< edge << std::endl;
+    // }
 
     long double area = polygon.area();
 
     Polygon_2 KP;
     CGAL::convex_hull_2(polygon.begin(), polygon.end(), std::back_inserter(KP));
 
-    cout<<"ratio: "<< area/KP.area() <<endl;
+    // cout<<"ratio: "<< area/KP.area() <<endl;
 
     return polygon;
 
