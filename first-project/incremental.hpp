@@ -20,4 +20,4 @@ typedef CGAL::Line_2 <K> Line_2D;
 typedef Polygon_2D::Edge_const_iterator EdgeIterator;
 typedef Polygon_2D::Vertex_iterator VertexIterator;
 
-long double incremental(Points, int, string);
+Polygon_2D incremental(Points, int, string);

@@ -1,0 +1,3 @@
+/home/dr/algorithmic-problems/first-project/CMakeFiles/rebuild_cache.dir
+/home/dr/algorithmic-problems/first-project/CMakeFiles/edit_cache.dir
+/home/dr/algorithmic-problems/first-project/CMakeFiles/main.dir

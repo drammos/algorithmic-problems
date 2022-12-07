@@ -260,7 +260,7 @@ Segment_2 maximum_area(vector<Segment_2> visible, Polygon_2D pol, Points points)
     return max_edge;
 }
 
-long double incremental(Points points, int edge_selection, string initialization){
+Polygon_2D incremental(Points points, int edge_selection, string initialization){
     srand(time(NULL));
     Polygon_2D pol;
     sorting(points, initialization);
@@ -328,5 +328,5 @@ long double incremental(Points points, int edge_selection, string initialization
     CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
     cout<<pol.is_simple()<<endl;
     cout<<"ratio: "<< pol.area()/KP.area() <<endl;
-    return pol.area();
+    return pol;
 }

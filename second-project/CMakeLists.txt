@@ -36,7 +36,7 @@ endif()
 # Creating entries for target: main
 # ############################
 
-add_executable( main main.cpp convex_hull_algorithmic.cpp incremental.cpp)
+add_executable( main main.cpp simulated_annealing.cpp ../first-project/convex_hull_algorithmic.cpp ../first-project/incremental.cpp)
 
 add_to_cached_list( CGAL_EXECUTABLE_TARGETS main )
 

@@ -368,7 +368,7 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon){
 /// @param points 
 /// @param edge_selection 
 /// @return 
-long double convex_hull( vector<Point_2> points, int edge_selection){
+Polygon_2 convex_hull( vector<Point_2> points, int edge_selection){
     
     Points result;
 
@@ -428,6 +428,6 @@ long double convex_hull( vector<Point_2> points, int edge_selection){
 
     cout<<"ratio: "<< area/KP.area() <<endl;
 
-    return area;
+    return polygon;
 
 }
