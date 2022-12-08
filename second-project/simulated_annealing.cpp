@@ -1,6 +1,53 @@
 #include "simulated_annealing.hpp"
 
 using namespace std;
+
+double global_step(Polygon_2D& pol, string min_max){
+    vector<Point_2> vertices;
+    for(const Point_2& v  : pol.vertices())
+        vertices.push_back(v);
+
+    bool valid = false;
+    Polygon_2D new_pol;
+    while(valid == false){
+        new_pol = pol;
+
+        int size = vertices.size();
+        int first = rand() % size;
+        int second = rand() % size;
+
+        while(second == first || second == first-1 || (second == 0 && first == size-1)){
+            first = rand() % size;
+            second = rand() % size;
+        }
+
+        for(VertexIterator vit = new_pol.vertices_begin(); vit != new_pol.vertices_end(); vit++){
+            if(vit->x() == vertices.at(first).x() && vit->y() == vertices.at(first).y()){
+                new_pol.erase(vit);
+                break;
+            }
+        }
+
+        for(VertexIterator vit = new_pol.vertices_begin(); vit != new_pol.vertices_end(); vit++){
+            if(vit->x() == vertices.at(second).x() && vit->y() == vertices.at(second).y()){
+                Point_2 point = vertices.at(first);
+                new_pol.insert(vit, point);
+                break;
+            }
+        }
+
+        if(new_pol.is_simple()){
+            valid = true;
+        }
+    }
+
+    pol = new_pol;
+    Polygon_2D KP;
+    CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
+    double new_energy = energy(vertices.size(), pol.area(), KP.area(), min_max);
+    return new_energy;
+}
+
 Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double threshold, string annealing){
     Polygon_2D new_polygon = polygon;
 
