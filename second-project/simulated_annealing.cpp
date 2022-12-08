@@ -46,6 +46,8 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double
         else{
             cout << "hh" << endl;
         }
+
+
         temperature = temperature - (1/L);
     }
 
@@ -85,8 +87,6 @@ double local_algorithm( Polygon_2D polygon, double area_convex_hull, int vertice
         vert_iter_point_next1 = polygon.vertices_begin();
         vert_iter_point_next2 = polygon.vertices_begin() + 1; 
     }
-
-    /// .... \./
     // The last -1
     else if(num_vertice == vertices_size - 2){
         vert_iter_point_before = polygon.vertices_end() - 3;
@@ -99,6 +99,7 @@ double local_algorithm( Polygon_2D polygon, double area_convex_hull, int vertice
         vert_iter_point_next1 = vert_iter_point + 1;
         vert_iter_point_next2 = vert_iter_point + 2;
     }
+    
     Point_2 previous_point(vert_iter_point_before->x(), vert_iter_point_before->y());
     Point_2 point(vert_iter_point->x(), vert_iter_point->y());
     Point_2 next_point(vert_iter_point_next1->x(), vert_iter_point_next1->y());
@@ -112,9 +113,11 @@ double local_algorithm( Polygon_2D polygon, double area_convex_hull, int vertice
     // meta gurnas tin energeia autou tou polygonoun an ola kala
     
 
-    vector<Point_2> points;
+    vector<Point2> points;
     Tree tree;
-    tree.search( back_inserter(points), box);
+    // tree.insert(polygon.vertices(), begin, end);
+    
+    tree.search_( back_inserter(points), box);
 
     // Create new edges
     // edge previous_point with next_point e1
