@@ -297,7 +297,13 @@ Polygon_2D global_step(Polygon_2D pol, string min_max){
         for(VertexIterator vit = new_pol.vertices_begin(); vit != new_pol.vertices_end(); vit++){
             if(vit->x() == vertices.at(second).x() && vit->y() == vertices.at(second).y()){
                 Point_2 point = vertices.at(first);
-                new_pol.insert(vit+1, point);
+                
+                if( vit == new_pol.vertices_end() - 1){
+                    new_pol.insert(new_pol.vertices_end() - 1, point);
+                }
+                else{
+                    new_pol.insert(vit+1, point);    
+                }
                 break;
             }
         }
