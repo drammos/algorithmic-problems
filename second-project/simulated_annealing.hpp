@@ -21,7 +21,10 @@ typedef Polygon_2D::Edge_const_iterator EdgeIterator;
 typedef Polygon_2D::Vertex_iterator VertexIterator;
 
 typedef std::vector<Point_2>::iterator pveciterator;
+
+
 Polygon_2D simulated_annealing(Polygon_2D, int, string, string);
+bool check_the_x(Point_2, Point_2);
 
 
 

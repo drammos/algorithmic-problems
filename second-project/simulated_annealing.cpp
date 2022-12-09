@@ -365,21 +365,8 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string
         if(annealing.compare("local") == 0){
             new_pol = local_algorithm(new_polygon, vertices_size, internal_points);
         }   
-        else if(annealing.compare("global") == 0){
-            new_pol = global_step(new_polygon, min_max);
-        }
         else{
-            // The service call local or global
-            if(vertices_size <= 1000){
-                if(vertices_size%2 == 0){
-                    // The service call local
-                    new_pol = local_algorithm(new_polygon, vertices_size, internal_points);
-                }
-                else{
-                    // The service call global
-                    new_pol = global_step(new_polygon, min_max);
-                }
-            }
+            new_pol = global_step(new_polygon, min_max);
         }
 
         // Energy for new
