@@ -260,7 +260,7 @@ Polygon_2D local_algorithm(Polygon_2D polygon, int vertices_size, vector<Point_2
     return new_polygon;
 }
 
-/// Gloabl step algorithm
+/// Gloabal step algorithm
 /// @brief 
 /// @param pol 
 /// @param min_max 
@@ -285,7 +285,7 @@ Polygon_2D global_step(Polygon_2D pol, string min_max){
             first = rand() % size;
             second = rand() % size;
         }
-
+        // Delete the point and after create edge with two other vertices
         for(VertexIterator vit = new_pol.vertices_begin(); vit != new_pol.vertices_end(); vit++){
             if(vit->x() == vertices.at(first).x() && vit->y() == vertices.at(first).y()){
                 new_pol.erase(vit);
@@ -293,10 +293,11 @@ Polygon_2D global_step(Polygon_2D pol, string min_max){
             }
         }
 
+        //Add point before the next vertice from random second-point
         for(VertexIterator vit = new_pol.vertices_begin(); vit != new_pol.vertices_end(); vit++){
             if(vit->x() == vertices.at(second).x() && vit->y() == vertices.at(second).y()){
                 Point_2 point = vertices.at(first);
-                new_pol.insert(vit, point);
+                new_pol.insert(vit+1, point);
                 break;
             }
         }
