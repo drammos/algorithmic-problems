@@ -266,6 +266,7 @@ Polygon_2D local_algorithm(Polygon_2D polygon, int vertices_size, vector<Point_2
 /// @param min_max 
 /// @return 
 Polygon_2D global_step(Polygon_2D pol, string min_max){
+    
     srand(time(NULL));
     vector<Point_2> vertices;
     for(const Point_2& v  : pol.vertices())
@@ -318,6 +319,8 @@ Polygon_2D global_step(Polygon_2D pol, string min_max){
 /// @param annealing 
 /// @return 
 Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double threshold, string annealing){
+    
+    srand((unsigned)time(NULL));
     Polygon_2D new_polygon = polygon;
 
 
@@ -351,7 +354,20 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double
             new_pol = global_step(new_polygon, min_max);
         }
         else{
-            cout << "hh" << endl;
+            // The service call local or global
+            if(vertices_size <= 1000){
+                if(vertices_size%2 == 0){
+                    // The service call local
+                    new_pol = local_algorithm(new_polygon, vertices_size, internal_points);
+                }
+                else{
+                    // The service call global
+                    new_pol = global_step(new_polygon, min_max);
+                }
+            }
+            else{
+                cout << "KAFES DANDALI!!!" << endl;
+            }
         }
 
         // Energy for new
@@ -361,7 +377,11 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double
             new_polygon = new_pol;
         }
         else{
-            new_polygon = new_pol;
+            // Mitropolis Critor
+            // double rand_number = (double)rand()/RAND_MAX;
+            if(metropolis_criterion(def_energy, temperature)){
+                new_polygon = new_pol;            
+            }           
         }
         temperature = temperature - (1/L);
     }
@@ -369,3 +389,12 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double
     return new_polygon;
 }
 
+bool metropolis_criterion(double def_energy, double temperature){
+    double value = exp((-1)*(def_energy/temperature));
+    random_device random_;
+    mt19937 generate_(random_());    
+    uniform_real_distribution<> dis_(0.0,1.0);
+    double r_value = dis_(generate_);
+
+    return value >= r_value; 
+}
