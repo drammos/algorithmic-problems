@@ -8,8 +8,8 @@ using namespace std;
 /// @param it1 
 /// @param it2 
 /// @return 
-bool check_the_x(Points::iterator it1, Points::iterator it2){
-    return it1->hx() < it2->hx();
+bool check_the_x(Point_2 point1, Point_2 point2){
+    return point1.x() < point2.x();
 }
 
 // Check for y
@@ -17,8 +17,8 @@ bool check_the_x(Points::iterator it1, Points::iterator it2){
 /// @param it1 
 /// @param it2 
 /// @return 
-bool check_the_y(Points::iterator it1, Points::iterator it2){
-    return it1->hy() < it2->hy();
+bool check_the_y(Point_2 point1, Point_2 point2){
+    return point1.y() < point2.y();
 }
 
 
@@ -42,13 +42,13 @@ Fuzzy_iso_box create_box(Point_2 previous_point, Point_2 point, Point_2 next_poi
     };
     // FOR THE Y
     sort(points.begin(), points.end(), check_the_y);
-    int small_y(points.begin()->hy());
-    int big_y((points.end() - 1)->hy());
+    int small_y(points.at(0).y());
+    int big_y(points.at(points.size()-1).y());
 
     // FOR THE X
     sort(points.begin(), points.end(), check_the_x);
-    int small_x(points.begin()->hx());
-    int big_x((points.end() - 1)->hx());
+    int small_x(points.at(0).x());
+    int big_x(points.at(points.size()-1).x());
 
     // Create the smallest point and the biggest boint
     Point_2 smallest(small_x, small_y);
