@@ -36,7 +36,7 @@ endif()
 # Creating entries for target: main
 # ############################
 
-add_executable( optimal_polygon main.cpp local_search.cpp simulated_annealing.cpp incremental.cpp convex_hull_algorithmic.cpp)
+add_executable( optimal_polygon main.cpp local_search.cpp simulated_annealing.cpp subdivision.cpp incremental.cpp convex_hull_algorithmic.cpp)
 
 add_to_cached_list( CGAL_EXECUTABLE_TARGETS main )
 

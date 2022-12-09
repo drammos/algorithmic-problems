@@ -4,9 +4,17 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+<<<<<<< HEAD:first-project/CMakeFiles/main.dir/DependInfo.cmake
   "/home/dr/algorithmic-problems/first-project/convex_hull_algorithmic.cpp" "/home/dr/algorithmic-problems/first-project/CMakeFiles/main.dir/convex_hull_algorithmic.cpp.o"
   "/home/dr/algorithmic-problems/first-project/incremental.cpp" "/home/dr/algorithmic-problems/first-project/CMakeFiles/main.dir/incremental.cpp.o"
   "/home/dr/algorithmic-problems/first-project/main.cpp" "/home/dr/algorithmic-problems/first-project/CMakeFiles/main.dir/main.cpp.o"
+=======
+  "/home/dr/algorithmic-problems/first-project/convex_hull_algorithmic.cpp" "/home/dr/algorithmic-problems/second-project/CMakeFiles/main.dir/home/dr/algorithmic-problems/first-project/convex_hull_algorithmic.cpp.o"
+  "/home/dr/algorithmic-problems/first-project/incremental.cpp" "/home/dr/algorithmic-problems/second-project/CMakeFiles/main.dir/home/dr/algorithmic-problems/first-project/incremental.cpp.o"
+  "/home/dr/algorithmic-problems/second-project/main.cpp" "/home/dr/algorithmic-problems/second-project/CMakeFiles/main.dir/main.cpp.o"
+  "/home/dr/algorithmic-problems/second-project/simulated_annealing.cpp" "/home/dr/algorithmic-problems/second-project/CMakeFiles/main.dir/simulated_annealing.cpp.o"
+  "/home/dr/algorithmic-problems/second-project/subdivision.cpp" "/home/dr/algorithmic-problems/second-project/CMakeFiles/main.dir/subdivision.cpp.o"
+>>>>>>> Add sub:second-project/CMakeFiles/main.dir/DependInfo.cmake
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

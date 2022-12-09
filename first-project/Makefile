@@ -204,6 +204,63 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+<<<<<<< HEAD:first-project/Makefile
+=======
+simulated_annealing.o: simulated_annealing.cpp.o
+
+.PHONY : simulated_annealing.o
+
+# target to build an object file
+simulated_annealing.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/simulated_annealing.cpp.o
+.PHONY : simulated_annealing.cpp.o
+
+simulated_annealing.i: simulated_annealing.cpp.i
+
+.PHONY : simulated_annealing.i
+
+# target to preprocess a source file
+simulated_annealing.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/simulated_annealing.cpp.i
+.PHONY : simulated_annealing.cpp.i
+
+simulated_annealing.s: simulated_annealing.cpp.s
+
+.PHONY : simulated_annealing.s
+
+# target to generate assembly for a file
+simulated_annealing.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/simulated_annealing.cpp.s
+.PHONY : simulated_annealing.cpp.s
+
+subdivision.o: subdivision.cpp.o
+
+.PHONY : subdivision.o
+
+# target to build an object file
+subdivision.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/subdivision.cpp.o
+.PHONY : subdivision.cpp.o
+
+subdivision.i: subdivision.cpp.i
+
+.PHONY : subdivision.i
+
+# target to preprocess a source file
+subdivision.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/subdivision.cpp.i
+.PHONY : subdivision.cpp.i
+
+subdivision.s: subdivision.cpp.s
+
+.PHONY : subdivision.s
+
+# target to generate assembly for a file
+subdivision.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/subdivision.cpp.s
+.PHONY : subdivision.cpp.s
+
+>>>>>>> Add sub:second-project/Makefile
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -222,6 +279,15 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+<<<<<<< HEAD:first-project/Makefile
+=======
+	@echo "... simulated_annealing.o"
+	@echo "... simulated_annealing.i"
+	@echo "... simulated_annealing.s"
+	@echo "... subdivision.o"
+	@echo "... subdivision.i"
+	@echo "... subdivision.s"
+>>>>>>> Add sub:second-project/Makefile
 .PHONY : help
 
 
