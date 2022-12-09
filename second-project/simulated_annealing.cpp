@@ -317,6 +317,20 @@ Polygon_2D global_step(Polygon_2D pol, string min_max){
     
 }
 
+/// @brief 
+/// @param def_energy 
+/// @param temperature 
+/// @return 
+bool metropolis_criterion(double def_energy, double temperature){
+    double value = exp((-1)*(def_energy/temperature));
+    random_device random_;
+    mt19937 generate_(random_());    
+    uniform_real_distribution<> dis_(0.0,1.0);
+    double r_value = dis_(generate_);
+
+    return value >= r_value; 
+}
+
 // Simulated Anneaning algorithm
 /// @brief 
 /// @param polygon 
@@ -394,14 +408,4 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double
     }
 
     return new_polygon;
-}
-
-bool metropolis_criterion(double def_energy, double temperature){
-    double value = exp((-1)*(def_energy/temperature));
-    random_device random_;
-    mt19937 generate_(random_());    
-    uniform_real_distribution<> dis_(0.0,1.0);
-    double r_value = dis_(generate_);
-
-    return value >= r_value; 
 }
