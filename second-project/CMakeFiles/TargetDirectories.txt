@@ -1,3 +1,0 @@
-/home/ioanna/algorithmic-problems/second-project/CMakeFiles/rebuild_cache.dir
-/home/ioanna/algorithmic-problems/second-project/CMakeFiles/edit_cache.dir
-/home/ioanna/algorithmic-problems/second-project/CMakeFiles/optimal_polygon.dir
