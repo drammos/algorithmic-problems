@@ -3,6 +3,9 @@
 #include "../first-project/to_polygon.hpp"
 #include "local_search.hpp"
 #include "simulated_annealing.hpp"
+#include "subdivision.hpp"
+
+Polygon_2D setup(vector<Point_2>);
 
 int main(int argc, char* argv[]){
     if(argc != 12){
@@ -13,11 +16,11 @@ int main(int argc, char* argv[]){
     string output_file = argv[4];
 
     // Cout in file
-    ofstream cout(output_file);
-    std::cout.rdbuf(cout.rdbuf());
+    // ofstream cout(output_file);
+    // std::cout.rdbuf(cout.rdbuf());
     
     // Read input file
-    vector< Point_2> points;
+    vector<Point_2> points;
 
     ifstream input_file;
     input_file.open(filename);
@@ -42,60 +45,87 @@ int main(int argc, char* argv[]){
 
     // Close the file
     input_file.close();
-
-    int edge_selection = 1;
     
+
+    string algorithm_2 = argv[6];
+    int L = atoi(argv[8]);
+    string min_max = argv[9];
+    double threshold = atof(argv[11]);
+
+    Polygon_2D new_pol;
+    string annealing;
+
+    if(algorithm_2.compare("simulated_annealing") == 0){
+        if(argc < 14){
+            cout<<" Not enough arguments\n" << argc << endl;
+            return -1;
+        }
+        annealing = argv[13];
+        if(annealing.compare("subdivision") == 0){
+            if(points.size() <= 1000){
+                string step;
+                if(points.size()%2 == 0){
+                    step = "local";
+                }
+                else{
+                    step = "global";
+                }
+                Polygon_2D polygon = setup(points);
+                new_pol = simulated_annealing(polygon, L, min_max, threshold, step);
+            }
+            new_pol = subdivision(points, L, min_max, threshold);
+
+        }
+        else{
+            Polygon_2D polygon = setup(points);
+            new_pol = simulated_annealing(polygon, L, min_max, threshold, annealing);
+        }
+    }
+    else if( algorithm_2.compare("local_search") ){
+        Polygon_2D polygon = setup(points);
+        cout << "Local search algorithmic" << endl;
+    }
+    
+    return 0;
+}
+
+Polygon_2D setup(vector< Point_2> points){
     // Start the time
     int time_start = clock();
-    Polygon_2D pol;
 
     cout<<"Optimal Area Polygonization"<<endl;
 
     string algorithm = "incremental";
     string init = "1a";
+    int edge_selection = 1;
+    Polygon_2D polygon;
 
     if( algorithm.compare("convex_hull") == 0){
-        pol = convex_hull(points, edge_selection);
+        polygon = convex_hull(points, edge_selection);
     }
     else{
-        pol = incremental(points, edge_selection, init);
+        polygon = incremental(points, edge_selection, init);
     }
 
     Polygon_2D KP;
     CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
     double ratio_initial = pol.area()/KP.area();
 
-    int L = atoi(argv[8]);
-    string min_max = argv[9];
-    double threshold = atof(argv[11]);
-
-    string algorithm_2 = argv[6];
-    cout<<"Algorithm: "<<algorithm_2<<"_"<<min_max<<endl;
-
-    cout<<"area_initial:"<<pol.area()<<endl;
-
-    
-    Polygon_2D new_pol;
-    string annealing;
-    if(!algorithm_2.compare("simulated_annealing")){
-        annealing = argv[11];
-        new_pol = simulated_annealing(pol, L, min_max, annealing);
+    if(!algorithm.compare("incremental")){
+        cout << " initialization: " << init << endl;
     }
-    else if(!algorithm_2.compare("local_search")){
-        new_pol = local_search(pol, L, min_max, threshold);
+    else{
+        cout << endl;
     }
-    
-    cout<<"area:"<<new_pol.area()<<endl;
-
-    cout<<"ratio_initial:"<<ratio_initial<<endl;
-
-    Polygon_2D KP1;
-    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
-
-    cout<<"ratio:"<<new_pol.area()/KP1.area()<<endl;
-
     int time_end = clock();
+    
     int time = time_end - time_start;
+    cout << "area: " << polygon.area() << endl;
+
     cout << "construction time: " << time << endl;
-    return 0;
+    return polygon;
 }
+
+    // cout<<"ratio_initial:"<<ratio_initial<<endl;
+
+// ./main -i input.txt -o outfile -algorithm simulated_annealing -L 5 -max -threshold 2.2 -annealing subdivision
