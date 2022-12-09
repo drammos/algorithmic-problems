@@ -53,15 +53,15 @@ Polygon_2D change_path(vector<Point_2> path, Segment_2 edge, Polygon_2D pol){
 
     for(VertexIterator vit = pol.vertices_begin(); vit != pol.vertices_end(); vit++){
 
-        if(vit->x() == edge.point(0).x() && vit->y() == edge.point(0).y()){
-            pol.insert(vit, path.at(path.size()-1));
+        if(vit->x() == edge.point(1).x() && vit->y() == edge.point(1).y()){
+            pol.insert(vit, path.at(0));
 
-            for(int i = path.size()-2; i >= 0; i--){
+            for(int i = 1; i < path.size(); i++){
 
                 VertexIterator vit = pol.vertices_begin();
                 while(vit != pol.vertices_end()){
 
-                    if(vit->x() == path.at(i+1).x() && vit->y() == path.at(i+1).y()){
+                    if(vit->x() == path.at(i-1).x() && vit->y() == path.at(i-1).y()){
 
                         pol.insert(vit, path.at(i));
                         break;
@@ -166,6 +166,5 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold)
         cout<<*eit<<endl;
     }
     cout<<best.is_simple()<<endl;
-    cout<<"Pol area: "<<pol.area()<<" best area: "<<best.area()<<endl;
     return best;
 }
