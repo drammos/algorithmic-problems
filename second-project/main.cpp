@@ -78,7 +78,7 @@ int main(int argc, char* argv[]){
         }
         else{
             Polygon_2D polygon = setup(points);
-            new_pol = simulated_annealing(polygon, L, min_max, threshold, annealing);
+            new_pol = simulated_annealing(polygon, L, min_max, annealing);
         }
     }
     else if( algorithm_2.compare("local_search") ){
@@ -89,13 +89,16 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
+/// @brief 
+/// @param points 
+/// @return 
 Polygon_2D setup(vector< Point_2> points){
     // Start the time
     int time_start = clock();
 
-    cout<<"Optimal Area Polygonization"<<endl;
+    cout<<"Polygonization"<<endl;
 
-    string algorithm = "incremental";
+    string algorithm = "convex_hull";
     string init = "1a";
     int edge_selection = 1;
     Polygon_2D polygon;
@@ -107,9 +110,8 @@ Polygon_2D setup(vector< Point_2> points){
         polygon = incremental(points, edge_selection, init);
     }
 
-    Polygon_2D KP;
-    CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
-    double ratio_initial = pol.area()/KP.area();
+    cout<<"Polygonization"<<endl;
+    cout<<"Algorithm: "<<algorithm<<" edge_selection: "<<edge_selection;
 
     if(!algorithm.compare("incremental")){
         cout << " initialization: " << init << endl;
@@ -126,6 +128,6 @@ Polygon_2D setup(vector< Point_2> points){
     return polygon;
 }
 
-    // cout<<"ratio_initial:"<<ratio_initial<<endl;
+
 
 // ./main -i input.txt -o outfile -algorithm simulated_annealing -L 5 -max -threshold 2.2 -annealing subdivision
