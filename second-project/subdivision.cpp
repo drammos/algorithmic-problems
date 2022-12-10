@@ -24,7 +24,9 @@ bool check_for_lowers(int i, int start, vector<Point_2> points){
 
     bool find = false;
     Point_2 point = points.at(i);
-    
+    if(start == 0){
+        start = -1;
+    }
     // Check for left side
     for(int num = start + 1; num < i; num++){
         Point_2 p = points.at(num);
@@ -39,7 +41,7 @@ bool check_for_lowers(int i, int start, vector<Point_2> points){
     
     find = false;
     // Check for right side
-    for(int num = i + 1; num < points.size(); i++){
+    for(int num = i + 1; num < points.size(); num++){
         Point_2 p = points.at(num);
         if(p.y() < point.y()){
             find = true;
@@ -57,7 +59,7 @@ bool check_for_lowers(int i, int start, vector<Point_2> points){
 /// @param min_max 
 /// @param threshold 
 /// @return 
-Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double threshold){
+Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
     // After with rand
     int m = 10;
     
@@ -73,7 +75,7 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double thr
     int vertices_size = points.size();
     int i_vertices = 0;
     int num = 0;
-    int num_from_spal = 0;
+    int num_from_spal = 1;
     
 
     // oraia as poume oti exoyme 3 se ena vert=30
@@ -85,12 +87,13 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double thr
     // kai to next lower with point for next
     bool last = false;
     while(true){
-        
         Spal spal;
+        spal.is_first = false;
+        spal.is_last = false;
         spal.number = num_from_spal;
         int num  = 1;
                 
-        for(int i = i_vertices; i < points.size(); i++){      
+        for(int i = i_vertices; i < points.size(); i++){    
             // Add point in points for spal
             Point_2 point = points.at(i);
             spal.points.push_back(point);
@@ -122,7 +125,6 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double thr
                     last = true;
                     break;
                 }
-
                 // Check for lowers points from left and right side in pointset
                 bool find_lowers =  check_for_lowers(i, spal.first_in_spal, points);
                 if(find_lowers){
@@ -134,12 +136,42 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double thr
             num++;
         }   
         spals.push_back(spal);
+        num_from_spal++;
         if(last){
             break;
         }
 
     }
 
+
+    // epomenos calo convex hull gia kathe ena
+    // kai gia left kai right point kanw save to edge toys
+
+    for(int num = 0; num < spals.size(); num++){
+        Spal spal = spals.at(num);
+        vector<Point_2> spal_points = spal.points;
+        Points result;
+
+        // Create the convex hull
+        CGAL::convex_hull_2(spal_points.begin(), spal_points.end(), std::back_inserter(result));
+        if(spal.is_first){
+            //tote vriskoume akmi mono gia to right
+
+        }
+        else if(spal.is_last){
+            //vrisko akmi mono gia to left
+
+        }
+        else{
+            // vrisko akmes kai gia ta duo
+        }
+        cout << "For num = " << num << " -- left: " << spal.left << " -- right: " << spal.right << endl;
+        for(int i = 0; i < result.size(); i++){
+            cout << "-- " << result.at(i) << endl;
+        } 
+    }
+    // allakse ton algo convex na min kanei change ta edge pou tha tou dineis
+    //telos tha ginei to merge  
     Polygon_2D polygon;
 
     return polygon;

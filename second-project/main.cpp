@@ -62,18 +62,18 @@ int main(int argc, char* argv[]){
         }
         annealing = argv[13];
         if(annealing.compare("subdivision") == 0){
-            if(points.size() <= 1000){
-                string step;
-                if(points.size()%2 == 0){
-                    step = "local";
-                }
-                else{
-                    step = "global";
-                }
-                Polygon_2D polygon = setup(points);
-                new_pol = simulated_annealing(polygon, L, min_max, threshold, step);
-            }
-            new_pol = subdivision(points, L, min_max, threshold);
+            // if(points.size() <= 1000){
+            //     string step;
+            //     if(points.size()%2 == 0){
+            //         step = "local";
+            //     }
+            //     else{
+            //         step = "global";
+            //     }
+            //     Polygon_2D polygon = setup(points);
+            //     new_pol = simulated_annealing(polygon, L, min_max, threshold, step);
+            // }
+            new_pol = subdivision(points, L, min_max);
 
         }
         else{
