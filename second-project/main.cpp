@@ -4,7 +4,7 @@
 #include "local_search.hpp"
 
 int main(int argc, char* argv[]){
-    if(argc < 12){
+    if(argc != 12){
         cout<<"Not enough arguments\n";
         return -1;
     }
@@ -78,11 +78,7 @@ int main(int argc, char* argv[]){
     Polygon_2D new_pol;
     string annealing;
     if(!algorithm_2.compare("simulated_annealing")){
-        if(argc < 14){
-            cout<<"Not enough arguments\n";
-            return -1;
-        }
-        annealing = argv[13];
+        annealing = argv[11];
     }
     else if(!algorithm_2.compare("local_search")){
         new_pol = local_search(pol, L, min_max, threshold);
