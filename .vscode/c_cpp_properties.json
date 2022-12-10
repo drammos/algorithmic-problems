@@ -3,18 +3,21 @@
         {
             "name": "Linux",
             "includePath": [
-<<<<<<< HEAD
                 "${workspaceFolder}/**"
-=======
-                "${workspaceFolder}/**",
-                "${workspaceFolder}"
->>>>>>> first-exercise
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu17",
             "cppStandard": "gnu++14",
-            "intelliSenseMode": "linux-gcc-x64"
+            "intelliSenseMode": "linux-gcc-x64",
+            "mergeConfigurations": false,
+            "configurationProvider": "ms-vscode.makefile-tools",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
         }
     ],
     "version": 4

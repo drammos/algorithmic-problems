@@ -2,6 +2,7 @@
 #include "convex_hull_algorithmic.hpp"
 #include "../first-project/to_polygon.hpp"
 #include "local_search.hpp"
+#include "simulated_annealing.hpp"
 
 int main(int argc, char* argv[]){
     if(argc != 12){
@@ -14,7 +15,6 @@ int main(int argc, char* argv[]){
     // Cout in file
     ofstream cout(output_file);
     std::cout.rdbuf(cout.rdbuf());
-
     
     // Read input file
     vector< Point_2> points;
@@ -36,7 +36,6 @@ int main(int argc, char* argv[]){
     while(input_file >> num >> x >> y)
     {   
         Point_2 new_point(x,y);
-
         // Add the points in vector
         points.push_back( new_point);
     }
@@ -80,6 +79,7 @@ int main(int argc, char* argv[]){
     string annealing;
     if(!algorithm_2.compare("simulated_annealing")){
         annealing = argv[11];
+        new_pol = simulated_annealing(pol, L, min_max, annealing);
     }
     else if(!algorithm_2.compare("local_search")){
         new_pol = local_search(pol, L, min_max, threshold);
