@@ -154,15 +154,83 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
 
         // Create the convex hull
         CGAL::convex_hull_2(spal_points.begin(), spal_points.end(), std::back_inserter(result));
-        if(spal.is_first){
-            //tote vriskoume akmi mono gia to right
+        // Create the polygon
+        Polygon_2D polygon;
+        for (pveciterator iter=result.begin(); iter!=result.end(); ++iter){
+            polygon.push_back(*iter);
+        }
 
+
+        if(!polygon.is_clockwise_oriented()){
+            polygon.reverse_orientation();
+        }
+        result = polygon.vertices();
+
+        if(spal.is_first){
+            Point_2 right_point = spal.right;          
+            
+            for(int i = 0; i < result.size(); i++){
+                
+                Point_2 the_point = result.at(i);
+                if(right_point == the_point){
+                    if( i == result.size() - 1){
+                        Point_2 next = result.at(0);
+                        spal.edge_right = Segment_2(next, right_point);
+                    }
+                    else{
+                        Point_2 next = result.at(i+1);
+                        spal.edge_right = Segment_2(next, right_point);
+                    }
+                }
+            }
         }
         else if(spal.is_last){
-            //vrisko akmi mono gia to left
+            Point_2 left_point = spal.left;          
+            
+            for(int i = 0; i < result.size(); i++){
+                
+                Point_2 the_point = result.at(i);
+                if(left_point == the_point){
+                    if( i == 0){
+                        Point_2 next = result.at(result.size() - 1);
+                        spal.edge_right = Segment_2(left_point, next);
+                    }
+                    else{
+                        Point_2 next = result.at(i+1);
+                        spal.edge_right = Segment_2(left_point, next);
+                    }
+                }
+            }
 
         }
         else{
+            Point_2 right_point = spal.right;          
+            Point_2 left_point = spal.left;
+            for(int i = 0; i < result.size(); i++){
+                
+                Point_2 the_point = result.at(i);
+                if(right_point == the_point){
+                    if( i == result.size() - 1){
+                        Point_2 next = result.at(0);
+                        spal.edge_right = Segment_2(right_point, next);
+                    }
+                    else{
+                        Point_2 next = result.at(i+1);
+                        spal.edge_right = Segment_2(right_point, next);
+                    }
+                }
+                
+                if(left_point == the_point){
+                    if( i == 0){
+                        Point_2 next = result.at(result.size() - 1);
+                        spal.edge_right = Segment_2(left_point, next);
+                    }
+                    else{
+                        Point_2 next = result.at(i+1);
+                        spal.edge_right = Segment_2(left_point, next);
+                    }
+                }
+            }
             // vrisko akmes kai gia ta duo
         }
         cout << "For num = " << num << " -- left: " << spal.left << " -- right: " << spal.right << endl;
