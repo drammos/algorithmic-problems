@@ -95,7 +95,6 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold)
 
         //finding all the possible paths of the polygon
         list<vector<Point_2>> paths = find_paths(vertices, L);
-
         vector<Polygon_2D> alternatives;
 
         for(vector<Point_2> path: paths){

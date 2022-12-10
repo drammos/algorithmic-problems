@@ -14,6 +14,7 @@ int main(int argc, char* argv[]){
     // Cout in file
     ofstream cout(output_file);
     std::cout.rdbuf(cout.rdbuf());
+
     
     // Read input file
     vector< Point_2> points;
@@ -51,7 +52,7 @@ int main(int argc, char* argv[]){
 
     cout<<"Optimal Area Polygonization"<<endl;
 
-    string algorithm = "convex_hull";
+    string algorithm = "incremental";
     string init = "1a";
 
     if( algorithm.compare("convex_hull") == 0){
