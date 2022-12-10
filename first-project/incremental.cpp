@@ -74,7 +74,7 @@ vector<Segment_2> red_edges(Points points, Polygon_2D pol){
     Polygon_2D newp;
     CGAL::convex_hull_2(pol1.begin(), pol1.end(), std::back_inserter(newp));
 
-    orientation(newp,pol1);
+    orientation(newp,pol);
 
     vector<Segment_2> edges_new;
     for(const Segment_2& e  : newp.edges())
