@@ -15,7 +15,11 @@ struct Spal{
     bool is_first;
 };
 
-
+/// @brief 
+/// @param i 
+/// @param start 
+/// @param points 
+/// @return 
 bool check_for_lowers(int i, int start, vector<Point_2> points){
 
     bool find = false;
@@ -85,12 +89,8 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double thr
         Spal spal;
         spal.number = num_from_spal;
         int num  = 1;
-        
-        Point_2 middle_point;
-        Point_2 next_lower;
-        
-        for(int i = i_vertices; i < points.size(); i++){
-            
+                
+        for(int i = i_vertices; i < points.size(); i++){      
             // Add point in points for spal
             Point_2 point = points.at(i);
             spal.points.push_back(point);
@@ -105,25 +105,15 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double thr
                 else{
                     // is the first from new spal
                     spal.left = point;
-                    // spal.edge_left = Segment_2(point, next_lower);
                     spal.is_first = false;
                 }
             }
             //an den exoume gemisei me ta m pou prepei
             if(num >= m){
-               // elegxo an to x auto pou mai tora
-               //plirei ta kritiria
-               //0...29
-               //0..9 - 10
-               //9..21 - 12
-                    // periseoun 9 mazi me to koino
-               //21..29
-               //30
                 // CHECK FOR THE OTHE POINTS IN LIST 
                 int difference_from_end = points.size() - i;
+                // Check for the last spal
                 if (difference_from_end < m){
-                    // an isxuei auto eimaste sto telos
-                    //ara ola mesa kai break;
                     spal.is_last = true;
                     for( int start_is = i + 1; start_is < points.size(); start_is++){
                         Point_2 the_point = points.at(start_is);
@@ -133,32 +123,20 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double thr
                     break;
                 }
 
-            
+                // Check for lowers points from left and right side in pointset
                 bool find_lowers =  check_for_lowers(i, spal.first_in_spal, points);
                 if(find_lowers){
-                    // spal.edge_right = Segment_2(find_points.previous, point);
                     spal.right = point;
                     i_vertices = i;
                     break;
                 }
-               // an nai
-                        // kratao to next_lower
-                        // kratao to prev_lower
-                        // sozo akmes kai point
-                        // i_vertices = i auto pou mai tora
-                        // spaw to break
-                // an oxi
-                        // sunexizo sto epomeno apla
-                        // an omos dn uparxei epomeno efarmozo edo to the last
-
             }
             num++;
         }   
-
+        spals.push_back(spal);
         if(last){
             break;
         }
-
 
     }
 
