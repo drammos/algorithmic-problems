@@ -79,15 +79,15 @@ int main(int argc, char* argv[]){
     
     // Start the time
     int time_start = clock();
-    long double area;
+    Polygon_2D pol;
 
     cout<<"Polygonization"<<endl;
 
     if( algorithm.compare("convex_hull") == 0){
-        area = convex_hull(points, edge_selection);
+        pol = convex_hull(points, edge_selection);
     }
     else{
-        area = incremental(points, edge_selection, init);
+        pol = incremental(points, edge_selection, init);
     }
     cout<<"Algorithm: "<<algorithm<<" edge_selection: "<<edge_selection;
 
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]){
     int time_end = clock();
     
     int time = time_end - time_start;
-    cout << "area: " << area << endl;
+    cout << "area: " << pol.area() << endl;
 
     cout << "construction time: " << time << endl;
 

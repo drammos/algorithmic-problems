@@ -34,6 +34,7 @@ bool compare_2b(Point_2 point1, Point_2 point2){
 void orientation(Polygon_2D& KP, Polygon_2D& pol){
     if((pol.is_clockwise_oriented() && !KP.is_clockwise_oriented()) || (!pol.is_clockwise_oriented() && KP.is_clockwise_oriented())){
         KP.reverse_orientation();
+
     }
 }
 
@@ -51,9 +52,9 @@ void sorting(Points& points, string init){
         sort(points.begin(), points.end(), compare_2b);
     }
 
-    for(int i=0; i < points.size(); i++){
-        cout << points.at(i) << endl;
-    }
+    // for(int i=0; i < points.size(); i++){
+    //     cout << points.at(i) << endl;
+    // }
 }
 
 vector<Segment_2> red_edges(Points points, Polygon_2D pol){
@@ -63,6 +64,7 @@ vector<Segment_2> red_edges(Points points, Polygon_2D pol){
 
     orientation(old,pol);
 
+
     vector<Segment_2> edges;
     for(const Segment_2& e  : old.edges())
         edges.push_back(e);
@@ -70,11 +72,12 @@ vector<Segment_2> red_edges(Points points, Polygon_2D pol){
     Polygon_2D pol1 = pol;
     pol1.push_back(points.at(0));
 
+
     //convex hull after new vertice
     Polygon_2D newp;
     CGAL::convex_hull_2(pol1.begin(), pol1.end(), std::back_inserter(newp));
 
-    orientation(newp,pol1);
+    orientation(newp,pol);
 
     vector<Segment_2> edges_new;
     for(const Segment_2& e  : newp.edges())
@@ -320,13 +323,13 @@ Polygon_2D incremental(Points points, int edge_selection, string initialization)
         points.erase(points.begin());
     }
 
-    for(EdgeIterator it = pol.edges_begin(); it != pol.edges_end(); it++){
-        cout<<*it<<endl;
-    }
+    // for(EdgeIterator it = pol.edges_begin(); it != pol.edges_end(); it++){
+    //     cout<<*it<<endl;
+    // }
 
     Polygon_2D KP;
     CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
-    cout<<pol.is_simple()<<endl;
-    cout<<"ratio: "<< pol.area()/KP.area() <<endl;
+    // cout<<pol.is_simple()<<endl;
+    // cout<<"ratio: "<< pol.area()/KP.area() <<endl;
     return pol;
 }

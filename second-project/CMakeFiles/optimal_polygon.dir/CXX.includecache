@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ioanna/algorithmic-problems/second-project/local_search.cpp
+local_search.hpp
+/home/ioanna/algorithmic-problems/second-project/local_search.hpp
+
+/home/ioanna/algorithmic-problems/second-project/local_search.hpp
+CGAL/convex_hull_2.h
+-
+CGAL/Polygon_2.h
+-
+CGAL/Convex_hull_traits_adapter_2.h
+-
+CGAL/Circular_kernel_intersections.h
+-
+CGAL/Exact_predicates_inexact_constructions_kernel.h
+-
+CGAL/property_map.h
+-
+iostream
+-
+fstream
+-
+random
+-
+time.h
+-
+
