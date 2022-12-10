@@ -18,4 +18,4 @@ typedef K::Segment_2 Segment_2;
 typedef Polygon_2::Vertex_iterator VertexIterator;
 
 
-Polygon_2 convex_hull(vector<Point_2>, int);
+Polygon_2 convex_hull(vector<Point_2>, int, Segment_2*, Segment_2*);

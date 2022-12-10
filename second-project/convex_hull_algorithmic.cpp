@@ -1,7 +1,7 @@
 #include "convex_hull_algorithmic.hpp"
 
 // Algorithmic for edge with Min Area
-Polygon_2 min_area(vector<Point_2> internal_points, Polygon_2 polygon){
+Polygon_2 max_area(vector<Point_2> internal_points, Polygon_2 polygon, Segment_2* edge1, Segment_2* edge2){
     
     while( !internal_points.empty() ){
         
@@ -13,6 +13,16 @@ Polygon_2 min_area(vector<Point_2> internal_points, Polygon_2 polygon){
         int num_internal_point = 0;
 
         for(const Segment_2& e  : polygon.edges()){
+            if(edge1 == NULL){
+                if(*edge1 == e){
+                    continue;
+                }
+            }
+            if(edge2 == NULL){
+                if(*edge2 == e){
+                    continue;
+                }
+            }
 
             // min distance is MAX            
             double min_distance = numeric_limits<double>::max();
@@ -125,7 +135,7 @@ Polygon_2 min_area(vector<Point_2> internal_points, Polygon_2 polygon){
 }
 
 // Algorithmic for edge with Max Area
-Polygon_2 max_area(vector<Point_2> internal_points, Polygon_2 polygon){
+Polygon_2 min_area(vector<Point_2> internal_points, Polygon_2 polygon, Segment_2* edge1, Segment_2* edge2){
     
     while( !internal_points.empty() ){
         
@@ -136,6 +146,16 @@ Polygon_2 max_area(vector<Point_2> internal_points, Polygon_2 polygon){
         int num_internal_point = 0;
 
         for(const Segment_2& e  : polygon.edges()){
+            if(edge1 == NULL){
+                if(*edge1 == e){
+                    continue;
+                }
+            }
+            if(edge2 == NULL){
+                if(*edge2 == e){
+                    continue;
+                }
+            }
 
             // min distance is MAX            
             double min_distance = numeric_limits<double>::max();
@@ -244,7 +264,7 @@ Polygon_2 max_area(vector<Point_2> internal_points, Polygon_2 polygon){
 }
 
 // Algorithmic for random-edge
-Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon){
+Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon, Segment_2* edge1, Segment_2* edge2){
     
     srand(time(NULL));
 
@@ -269,6 +289,16 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon){
 
             // Take the random edge
             edge = edges.at(num_edge);
+            if(edge1 == NULL){
+                if(*edge1 == edge){
+                    continue;
+                }
+            }
+            if(edge2 == NULL){
+                if(*edge2 == edge){
+                    continue;
+                }
+            }
 
 
             Point_2 p_1 = edge.point(0);
@@ -368,7 +398,7 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon){
 /// @param points 
 /// @param edge_selection 
 /// @return 
-Polygon_2 convex_hull( vector<Point_2> points, int edge_selection){
+Polygon_2 convex_hull( vector<Point_2> points, int edge_selection, Segment_2* edge1, Segment_2* edge2){
     
     Points result;
 
@@ -402,31 +432,14 @@ Polygon_2 convex_hull( vector<Point_2> points, int edge_selection){
     
 
     if( edge_selection == 1){
-        polygon = random_edge(internal_points, polygon);
+        polygon = random_edge(internal_points, polygon, edge1, edge2);
     }
     else if( edge_selection == 2){
-        polygon = min_area(internal_points, polygon);
+        polygon = min_area(internal_points, polygon, edge1, edge2);
     }
     else{
-        polygon = max_area(internal_points, polygon);
+        polygon = max_area(internal_points, polygon, edge1, edge2);
     }
-
-    // Take the vertices from polyhon
-    // for(const Point_2& point : polygon.vertices()){
-    //     std::cout << point << std::endl;
-    // }
-    
-    // Take the edges from polygon
-    // for(const Segment_2& edge  : polygon.edges()){
-    //     std::cout<< edge << std::endl;
-    // }
-
-    long double area = polygon.area();
-
-    Polygon_2 KP;
-    CGAL::convex_hull_2(polygon.begin(), polygon.end(), std::back_inserter(KP));
-
-    // cout<<"ratio: "<< area/KP.area() <<endl;
 
     return polygon;
 

@@ -103,8 +103,12 @@ Polygon_2D setup(vector< Point_2> points){
     int edge_selection = 1;
     Polygon_2D polygon;
 
+    
+
     if( algorithm.compare("convex_hull") == 0){
-        polygon = convex_hull(points, edge_selection);
+        Segment_2* edge1 = NULL;
+        Segment_2* edge2 = NULL;
+        polygon = convex_hull(points, edge_selection, edge1, edge2);
     }
     else{
         polygon = incremental(points, edge_selection, init);

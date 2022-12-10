@@ -1,5 +1,6 @@
 #include "subdivision.hpp"
 #include "simulated_annealing.hpp"
+#include "convex_hull_algorithmic.hpp"
 
 using namespace std;
 
@@ -9,6 +10,7 @@ struct Spal{
     Segment_2 edge_left;
     Segment_2 edge_right;
     vector<Point_2> points;
+    Polygon_2D polygon;
     int number; 
     int first_in_spal;
     bool is_last;
@@ -219,7 +221,7 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
                         spal.edge_right = Segment_2(right_point, next);
                     }
                 }
-                
+
                 if(left_point == the_point){
                     if( i == 0){
                         Point_2 next = result.at(result.size() - 1);
@@ -233,10 +235,36 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
             }
             // vrisko akmes kai gia ta duo
         }
-        cout << "For num = " << num << " -- left: " << spal.left << " -- right: " << spal.right << endl;
-        for(int i = 0; i < result.size(); i++){
-            cout << "-- " << result.at(i) << endl;
-        } 
+
+        Polygon_2D new_polygon_convex;
+
+        // Call convex hull algorithm
+        if(spal.is_first){
+            Segment_2* edge1 =  new Segment_2;
+            *edge1 = spal.edge_right;
+            Segment_2* edge2 = NULL;
+
+            new_polygon_convex = convex_hull(spal.points, 1, edge1, edge2);
+        }
+        else if(spal.is_last){
+            Segment_2* edge2 =  new Segment_2;
+            *edge2 = spal.edge_left;
+            Segment_2* edge1 = NULL;
+
+            new_polygon_convex = convex_hull(spal.points, 1, edge1, edge2);
+        }
+        else{
+            Segment_2* edge1 =  new Segment_2;
+            *edge1 = spal.edge_right;
+            Segment_2* edge2 =  new Segment_2;
+            *edge2 = spal.edge_left;
+
+            new_polygon_convex = convex_hull(spal.points, 1, edge1, edge2);
+        }
+        
+        // Call global
+        Polygon_2D new_pol_simulated = simulated_annealing(new_polygon_convex, L, min_max, "global");
+        spal.polygon = new_pol_simulated;
     }
     // allakse ton algo convex na min kanei change ta edge pou tha tou dineis
     //telos tha ginei to merge  
