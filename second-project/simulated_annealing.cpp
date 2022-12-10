@@ -189,30 +189,30 @@ Polygon_2D local_algorithm(Polygon_2D polygon, int vertices_size, vector<Point_2
 
         // Points vertices = polygon.
         int num_vertice = my_rand%vertices_size;
+        new_polygon = polygon;
 
-
-        VertexIterator vert_iter_point = polygon.vertices_begin() + num_vertice;
+        VertexIterator vert_iter_point = new_polygon.vertices_begin() + num_vertice;
         VertexIterator vert_iter_point_before;
         VertexIterator vert_iter_point_next1;
         VertexIterator vert_iter_point_next2;
 
         // The first
         if( num_vertice == 0){
-            vert_iter_point_before = polygon.vertices_end() - 1;
-            vert_iter_point_next1 = polygon.vertices_begin() + 1;
-            vert_iter_point_next2 = polygon.vertices_begin() + 2;   
+            vert_iter_point_before = new_polygon.vertices_end() - 1;
+            vert_iter_point_next1 = new_polygon.vertices_begin() + 1;
+            vert_iter_point_next2 = new_polygon.vertices_begin() + 2;   
         }
         // The last
         else if( num_vertice == vertices_size - 1 ){
-            vert_iter_point_before = polygon.vertices_end() - 2;
-            vert_iter_point_next1 = polygon.vertices_begin();
-            vert_iter_point_next2 = polygon.vertices_begin() + 1; 
+            vert_iter_point_before = new_polygon.vertices_end() - 2;
+            vert_iter_point_next1 = new_polygon.vertices_begin();
+            vert_iter_point_next2 = new_polygon.vertices_begin() + 1; 
         }
         // The last -1
         else if(num_vertice == vertices_size - 2){
-            vert_iter_point_before = polygon.vertices_end() - 3;
-            vert_iter_point_next1 = polygon.vertices_end() - 1;
-            vert_iter_point_next2 = polygon.vertices_begin();
+            vert_iter_point_before = new_polygon.vertices_end() - 3;
+            vert_iter_point_next1 = new_polygon.vertices_end() - 1;
+            vert_iter_point_next2 = new_polygon.vertices_begin();
         }
         // Any other
         else{
@@ -236,8 +236,6 @@ Polygon_2D local_algorithm(Polygon_2D polygon, int vertices_size, vector<Point_2
         
         Fuzzy_iso_box box = create_box(previous_point, point, next_point, next_2_point);
 
-        
-
         vector<Point_2> points_in_box;
 
         // Create tree and find the points in box
@@ -248,9 +246,7 @@ Polygon_2D local_algorithm(Polygon_2D polygon, int vertices_size, vector<Point_2
 
         // Delete point where find from rand()
         // And the polygon create automatic new edge with previous & next 
-        new_polygon = polygon;
         new_polygon.erase(vert_iter_point);
-
         // Add again the point before the next_2_point
         new_polygon.insert(vert_iter_point_next2, point);
 
@@ -299,7 +295,7 @@ Polygon_2D global_step(Polygon_2D pol, string min_max){
                 Point_2 point = vertices.at(first);
                 
                 if( vit == new_pol.vertices_end() - 1){
-                    new_pol.insert(new_pol.vertices_end() - 1, point);
+                    new_pol.insert(new_pol.begin(), point);
                 }
                 else{
                     new_pol.insert(vit+1, point);    
@@ -322,7 +318,7 @@ Polygon_2D global_step(Polygon_2D pol, string min_max){
 /// @param temperature 
 /// @return 
 bool metropolis_criterion(double def_energy, double temperature){
-    double value = exp((-1)*(def_energy/temperature));
+    double value = exp(((-1)*def_energy)/temperature);
     random_device random_;
     mt19937 generate_(random_());    
     uniform_real_distribution<> dis_(0.0,1.0);
@@ -339,7 +335,7 @@ bool metropolis_criterion(double def_energy, double temperature){
 /// @param threshold 
 /// @param annealing 
 /// @return 
-Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double threshold, string annealing){
+Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string annealing){
     
     srand((unsigned)time(NULL));
     Polygon_2D new_polygon = polygon;
@@ -348,15 +344,11 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double
     double temperature = 1;
     Points internal_points = polygon.vertices();
     int vertices_size = internal_points.size();
-    Points result;
+    // Points result;
 
     // Create the convex hull
-    CGAL::convex_hull_2(internal_points.begin(), internal_points.end(), std::back_inserter(result));
     Polygon_2D polygon_convex_hull;
-
-    for (pveciterator iter=result.begin(); iter!=result.end(); ++iter){
-        polygon_convex_hull.push_back(*iter);
-    }
+    CGAL::convex_hull_2(internal_points.begin(), internal_points.end(), std::back_inserter(polygon_convex_hull));
 
     // Area for convex hull 
     // The convex hull is same for all program
@@ -364,9 +356,11 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double
 
     // Start energy for polygon
     double polygon_energy = energy(vertices_size, polygon.area(), area_convex_hull, min_max);
+    double new_pol_energy = polygon_energy;
 
-    while(temperature > 0){
-        double new_energy;
+    while(temperature >= 0){
+        polygon_energy = new_pol_energy;
+        // double new_energy;
         Polygon_2D new_pol;
         if(annealing.compare("local") == 0){
             new_pol = local_algorithm(new_polygon, vertices_size, internal_points);
@@ -386,26 +380,29 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, double
                     new_pol = global_step(new_polygon, min_max);
                 }
             }
-            else{
-                cout << "KAFES DANDALI!!!" << endl;
-            }
         }
 
         // Energy for new
+        
+
         double new_pol_energy = energy(vertices_size, new_pol.area(), area_convex_hull, min_max);
         double def_energy = new_pol_energy - polygon_energy;
         if(def_energy < 0){
             new_polygon = new_pol;
+            internal_points = new_pol.vertices();
         }
         else{
             // Mitropolis Critor
             // double rand_number = (double)rand()/RAND_MAX;
             if(metropolis_criterion(def_energy, temperature)){
-                new_polygon = new_pol;            
+                new_polygon = new_pol;      
+                internal_points = new_pol.vertices();      
             }           
         }
-        temperature = temperature - (1/L);
+        temperature = temperature - (double)((double)1/(double)L);
     }
-
+    for(EdgeIterator it = new_polygon.edges_begin(); it != new_polygon.edges_end(); it++){
+        cout<<*it<<endl;
+    }
     return new_polygon;
 }

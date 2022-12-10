@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[]){
 
-    if(argc < 12){
+    if(argc != 12){
         cout<<"Not enough arguments\n";
         return -1;
     }
@@ -13,9 +13,9 @@ int main(int argc, char* argv[]){
     string output_file = argv[4];
 
     // Cout in file
-    // ofstream cout(output_file);
-    // std::cout.rdbuf(cout.rdbuf());
-    cout << argc << endl;
+    ofstream cout(output_file);
+    std::cout.rdbuf(cout.rdbuf());
+    // cout << argc << endl;
     
     // Read input file
     vector< Point_2> points;
@@ -37,7 +37,6 @@ int main(int argc, char* argv[]){
     while(input_file >> num >> x >> y)
     {   
         Point_2 new_point(x,y);
-
         // Add the points in vector
         points.push_back( new_point);
     }
@@ -53,7 +52,7 @@ int main(int argc, char* argv[]){
 
     cout<<"Polygonization"<<endl;
 
-    string algorithm = "convex_hull";
+    string algorithm = "incremental";
     string init = "1a";
 
     if( algorithm.compare("convex_hull") == 0){
@@ -62,6 +61,9 @@ int main(int argc, char* argv[]){
     else{
         pol = incremental(points, edge_selection, init);
     }
+
+    cout << "area old: " << pol.area() << endl;
+
 
     cout<<"Polygonization"<<endl;
     cout<<"Algorithm: "<<algorithm<<" edge_selection: "<<edge_selection;
@@ -72,32 +74,30 @@ int main(int argc, char* argv[]){
     else{
         cout << endl;
     }
-    int time_end = clock();
     
-    int time = time_end - time_start;
-    cout << "area: " << pol.area() << endl;
-
-    cout << "construction time: " << time << endl;
 
     string algorithm_2 = argv[6];
     int L = atoi(argv[8]);
     string min_max = argv[9];
-    double threshold = atof(argv[11]);
+    
 
     Polygon_2D new_pol;
     string annealing;
 
     if(algorithm_2.compare("simulated_annealing") == 0){
-        if(argc < 14){
-            cout<<" Not enough arguments\n" << argc << endl;
-            return -1;
-        }
-        annealing = argv[13];
-        new_pol = simulated_annealing(pol, L, min_max, threshold, annealing);
+        annealing = argv[11];
+        new_pol = simulated_annealing(pol, L, min_max, annealing);
     }
     else if( algorithm_2.compare("local_search") ){
+        double threshold = atof(argv[11]);
         cout << "Local search algorithmic" << endl;
     }
+    int time_end = clock();
+    
+    int time = time_end - time_start;
+    cout << "area: " << new_pol.area() << endl;
+
+    cout << "construction time: " << time << endl;
     
     return 0;
 }
