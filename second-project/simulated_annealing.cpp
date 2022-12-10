@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 // Check for x
 /// @brief 
 /// @param it1 
@@ -20,7 +19,6 @@ bool check_the_x(Point_2 point1, Point_2 point2){
 bool check_the_y(Point_2 point1, Point_2 point2){
     return point1.y() < point2.y();
 }
-
 
 // Create the box with min and max points from x and y
 /// @brief
@@ -74,7 +72,6 @@ double energy(int vertices_size, double area_polygon, double area_convex_hull, s
         return vertices_size*(1 - (area_polygon/area_convex_hull));
     }
 }
-
 
 // Check the polygon with box
 bool check_the_polygon(Polygon_2D polygon, vector<Point_2> box_points){
