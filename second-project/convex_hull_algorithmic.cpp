@@ -13,13 +13,31 @@ Polygon_2 max_area(vector<Point_2> internal_points, Polygon_2 polygon, Segment_2
         int num_internal_point = 0;
 
         for(const Segment_2& e  : polygon.edges()){
-            if(edge1 == NULL){
-                if(*edge1 == e){
+           if(edge1 != nullptr){
+                Point_2 p1_e1 = edge1->point(0);
+                Point_2 p2_e1 = edge1->point(1);  
+
+                Point_2 p1_e = e.point(0);
+                Point_2 p2_e = e.point(1);
+
+                if(p1_e1 == p1_e && p2_e1 == p2_e){
+                    continue;
+                }
+                if(p1_e1 == p2_e && p2_e1 == p1_e){
                     continue;
                 }
             }
-            if(edge2 == NULL){
-                if(*edge2 == e){
+            if(edge2 != nullptr){
+                Point_2 p1_e2 = edge2->point(0);
+                Point_2 p2_e2 = edge2->point(1);  
+            
+                Point_2 p1_e = e.point(0);
+                Point_2 p2_e = e.point(1);
+
+                if(p1_e2 == p1_e && p2_e2 == p2_e){
+                    continue;
+                }
+                if(p1_e2 == p2_e && p2_e2 == p1_e){
                     continue;
                 }
             }
@@ -146,13 +164,31 @@ Polygon_2 min_area(vector<Point_2> internal_points, Polygon_2 polygon, Segment_2
         int num_internal_point = 0;
 
         for(const Segment_2& e  : polygon.edges()){
-            if(edge1 == NULL){
-                if(*edge1 == e){
+            if(edge1 != nullptr){
+                Point_2 p1_e1 = edge1->point(0);
+                Point_2 p2_e1 = edge1->point(1);  
+
+                Point_2 p1_e = e.point(0);
+                Point_2 p2_e = e.point(1);
+
+                if(p1_e1 == p1_e && p2_e1 == p2_e){
+                    continue;
+                }
+                if(p1_e1 == p2_e && p2_e1 == p1_e){
                     continue;
                 }
             }
-            if(edge2 == NULL){
-                if(*edge2 == e){
+            if(edge2 != nullptr){
+                Point_2 p1_e2 = edge2->point(0);
+                Point_2 p2_e2 = edge2->point(1);  
+            
+                Point_2 p1_e = e.point(0);
+                Point_2 p2_e = e.point(1);
+
+                if(p1_e2 == p1_e && p2_e2 == p2_e){
+                    continue;
+                }
+                if(p1_e2 == p2_e && p2_e2 == p1_e){
                     continue;
                 }
             }
@@ -289,17 +325,44 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon, Segmen
 
             // Take the random edge
             edge = edges.at(num_edge);
-            if(edge1 == NULL){
+
+            if(edge1 != nullptr){
+                Point_2 p1_e1 = edge1->point(0);
+                Point_2 p2_e1 = edge1->point(1);  
+
+                Point_2 p1_e = edge.point(0);
+                Point_2 p2_e = edge.point(1);
+
+                if(p1_e1 == p1_e && p2_e1 == p2_e){
+                    continue;
+                }
+                if(p1_e1 == p2_e && p2_e1 == p1_e){
+                    continue;
+                }
+
                 if(*edge1 == edge){
                     continue;
                 }
             }
-            if(edge2 == NULL){
+            if(edge2 != nullptr){
+                Point_2 p1_e2 = edge2->point(0);
+                Point_2 p2_e2 = edge2->point(1);  
+            
+                Point_2 p1_e = edge.point(0);
+                Point_2 p2_e = edge.point(1);
+
+                if(p1_e2 == p1_e && p2_e2 == p2_e){
+                    continue;
+                }
+                if(p1_e2 == p2_e && p2_e2 == p1_e){
+                    continue;
+                }
+
                 if(*edge2 == edge){
                     continue;
                 }
             }
-
+            
 
             Point_2 p_1 = edge.point(0);
             Point_2 p_2 = edge.point(1);
@@ -393,7 +456,6 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon, Segmen
 }
 
 
-
 /// @brief
 /// @param points 
 /// @param edge_selection 
@@ -429,8 +491,6 @@ Polygon_2 convex_hull( vector<Point_2> points, int edge_selection, Segment_2* ed
         }
     }
 
-    
-
     if( edge_selection == 1){
         polygon = random_edge(internal_points, polygon, edge1, edge2);
     }
@@ -441,6 +501,6 @@ Polygon_2 convex_hull( vector<Point_2> points, int edge_selection, Segment_2* ed
         polygon = max_area(internal_points, polygon, edge1, edge2);
     }
 
-    return polygon;
 
+    return polygon;
 }

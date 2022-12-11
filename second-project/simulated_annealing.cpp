@@ -258,12 +258,14 @@ Polygon_2D local_algorithm(Polygon_2D polygon, int vertices_size, vector<Point_2
 /// @param pol 
 /// @param min_max 
 /// @return 
-Polygon_2D global_step(Polygon_2D pol, string min_max){
+Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment_2* edge2){
     
     srand(time(NULL));
-    vector<Point_2> vertices;
-    for(const Point_2& v  : pol.vertices())
-        vertices.push_back(v);
+    if(!pol.is_clockwise_oriented()){
+        pol.reverse_orientation();
+    }
+
+    vector<Point_2> vertices = pol.vertices();
 
     bool valid = false;
     Polygon_2D new_pol;
@@ -278,6 +280,135 @@ Polygon_2D global_step(Polygon_2D pol, string min_max){
             first = rand() % size;
             second = rand() % size;
         }
+
+        Point_2 point_first = vertices.at(first);
+        Point_2 next_point_first;
+        Point_2 previous_point_first;
+        if(first == 0){
+            next_point_first = vertices.at(1);
+            previous_point_first = vertices.at(size - 1);
+        }
+        else if(first == size - 1){
+            next_point_first = vertices.at(0);
+            previous_point_first = vertices.at(size - 2);
+        }
+        else{
+            next_point_first = vertices.at(first + 1);
+            previous_point_first = vertices.at(first - 1);
+        }
+        
+        Point_2 point_second = vertices.at(second);
+        Point_2 next_point_second;
+
+        if( second == size - 1){
+            next_point_second = vertices.at(0);
+        }
+        else{
+            next_point_second = vertices.at(second + 1);
+        }
+
+        // We have 3 edges
+        Segment_2 right_edge_first_q = Segment_2(previous_point_first, point_first);
+        Segment_2 left_edge_first_q = Segment_2(point_first, next_point_first);
+        Segment_2 edge_s = Segment_2(point_second, next_point_second);
+
+        // Check the edge1 and edge2
+        if(edge1 != nullptr){
+
+                Point_2 p1_e1 = edge1->point(0);
+                Point_2 p2_e1 = edge1->point(1);  
+
+                Point_2 p1_e = right_edge_first_q.point(0);
+                Point_2 p2_e = right_edge_first_q.point(1);
+
+                if(p1_e1 == p1_e && p2_e1 == p2_e){
+                    continue;
+                }
+                if(p1_e1 == p2_e && p2_e1 == p1_e){
+                    continue;
+                }
+
+                if(*edge1 == right_edge_first_q){
+                    continue;
+                }
+
+                Point_2 p1_ed = left_edge_first_q.point(0);
+                Point_2 p2_ed = left_edge_first_q.point(1);
+
+                if(p1_e1 == p1_ed && p2_e1 == p2_ed){
+                    continue;
+                }
+                if(p1_e1 == p2_ed && p2_e1 == p1_ed){
+                    continue;
+                }
+
+                if(*edge1 == left_edge_first_q){
+                    continue;
+                }
+
+                Point_2 p1_edg = edge_s.point(0);
+                Point_2 p2_edg = edge_s.point(1);
+
+                if(p1_e1 == p1_edg && p2_e1 == p2_edg){
+                    continue;
+                }
+                if(p1_e1 == p2_edg && p2_e1 == p1_edg){
+                    continue;
+                }
+
+                if(*edge1 == edge_s){
+                    continue;
+                }
+                
+            }
+            if(edge2 != nullptr){
+                Point_2 p1_e2 = edge2->point(0);
+                Point_2 p2_e2 = edge2->point(1);  
+            
+                Point_2 p1_e = right_edge_first_q.point(0);
+                Point_2 p2_e = right_edge_first_q.point(1);
+
+                if(p1_e2 == p1_e && p2_e2 == p2_e){
+                    continue;
+                }
+                if(p1_e2 == p2_e && p2_e2 == p1_e){
+                    continue;
+                }
+
+                if(*edge2 == right_edge_first_q){
+                    continue;
+                }
+            
+                Point_2 p1_ed = left_edge_first_q.point(0);
+                Point_2 p2_ed = left_edge_first_q.point(1);
+
+                if(p1_e2 == p1_ed && p2_e2 == p2_ed){
+                    continue;
+                }
+                if(p1_e2 == p2_ed && p2_e2 == p1_ed){
+                    continue;
+                }
+
+                if(*edge2 == left_edge_first_q){
+                    continue;
+                }
+
+                Point_2 p1_edg = edge_s.point(0);
+                Point_2 p2_edg = edge_s.point(1);
+
+                if(p1_e2 == p1_edg && p2_e2 == p2_edg){
+                    continue;
+                }
+                if(p1_e2 == p2_edg && p2_e2 == p1_edg){
+                    continue;
+                }
+
+                if(*edge2 == edge_s){
+                    continue;
+                }
+            }
+
+
         // Delete the point and after create edge with two other vertices
         for(VertexIterator vit = new_pol.vertices_begin(); vit != new_pol.vertices_end(); vit++){
             if(vit->x() == vertices.at(first).x() && vit->y() == vertices.at(first).y()){
@@ -332,7 +463,7 @@ bool metropolis_criterion(double def_energy, double temperature){
 /// @param threshold 
 /// @param annealing 
 /// @return 
-Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string annealing){
+Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string annealing, Segment_2* edge1, Segment_2* edge2){
     
     srand((unsigned)time(NULL));
     Polygon_2D new_polygon = polygon;
@@ -363,7 +494,7 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string
             new_pol = local_algorithm(new_polygon, vertices_size, internal_points);
         }   
         else{
-            new_pol = global_step(new_polygon, min_max);
+            new_pol = global_step(new_polygon, min_max, edge1, edge2);
         }
 
         // Energy for new
@@ -385,8 +516,6 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string
         }
         temperature = temperature - (double)((double)1/(double)L);
     }
-    for(EdgeIterator it = new_polygon.edges_begin(); it != new_polygon.edges_end(); it++){
-        cout<<*it<<endl;
-    }
+    
     return new_polygon;
 }
