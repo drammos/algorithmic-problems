@@ -155,15 +155,6 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold)
         dif = abs(best.area() - prev.area());
     }
     best = prev;
-
-    //printing the final polygon
-    for(VertexIterator vit = best.vertices_begin(); vit != best.vertices_end(); vit++){
-        cout<<vit->x()<<" "<< vit->y()<<endl;
-    }
-
-    for(EdgeIterator eit = best.edges_begin(); eit != best.edges_end(); eit++){
-        cout<<*eit<<endl;
-    }
-    cout<<best.is_simple()<<endl;
+    
     return best;
 }

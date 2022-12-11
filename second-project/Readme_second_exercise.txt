@@ -158,7 +158,7 @@
     - min_max
     Η κυρια συναρητση μας ειναι η subdivision().
         - Για αρχη ταξινομουμε τα points σε αυξουσα σειρα με βαση το x στον αξονα.
-        - Διαλεγουμε εναν τυχαιο αριθμο 100 <= m <= 1000.
+        - Διαλεγουμε εναν τυχαιο αριθμο 10 <= m <= 100.
             Το m καθοριζει ποσα τουλαχιστον θα ειναι τα σημεια για καθε "παρτιδα" σημειων που θα Χωριζουμε.
         - Επειτα προσπαθη να κανει διασπαση ολων των points σε spal.
             Πρεπει καθε spal να εμπεριεχει m points.
@@ -185,3 +185,123 @@
 
         - Τελος κανουμε merge τα πολυγωνα ενωνοντας τα μεταξυ τους διαχωριζοντας τις ακμες που μακραραμε και ενωνοντας τα μη κοινα σημεια
         μεταξυ τους.
+
+
+
+
+Παρατηρήσεις:
+
+    Παρατηρούμε ότι ο local search είναι αρκετά πιο αργός από τον simulated annealing αλλά δίνει μεγαλύτερες διαφορές εμβαδόντος
+    ανάμεσα στο αρχικό και το τελικό πολύγωνο. Επίσης, ο simulated annealing λόγω του metropolis criteria σπάνια δίνει λάθος αποτέλεσμα.
+
+Παραδείγματα εκτελέσεων:
+
+    -./optimal_polygon -i 20.instance -o outfile -algorithm local_search -L 3 -max -threshold 0.3
+     Αποτέλεσμα:
+     Optimal Area Polygonization
+     Algorithm: local_search_-max
+     area_initial:3.5095e+07
+     area:4.20619e+07
+     ratio_initial:0.734856
+     ratio:0.880737
+     construction time: 681837
+
+    -./optimal_polygon -i 40.instance -o outfile -algorithm local_search -L 3 -max -threshold 0.3
+     Αποτέλεσμα:
+     Optimal Area Polygonization
+     Algorithm: local_search_-max
+     area_initial:2.10929e+07
+     area:4.47092e+07
+     ratio_initial:0.415466
+     ratio:0.880637
+     construction time: 10605003
+
+    -./optimal_polygon -i 60.instance -o outfile -algorithm local_search -L 3 -min -threshold 0.3
+     Αποτέλεσμα:
+     Optimal Area Polygonization
+     Algorithm: local_search_-min
+     area_initial:1.52662e+11
+     area:4.80977e+10
+     ratio_initial:0.585869
+     ratio:0.184584
+     construction time: 42271987
+
+    -./optimal_polygon -i 100.instance -o outfile -algorithm local_search -L 3 -min -threshold 0.3
+     Αποτέλεσμα:
+     Optimal Area Polygonization
+     Algorithm: local_search_-min
+     area_initial:4.06317e+07
+     area:1.22302e+07
+     ratio_initial:0.538291
+     ratio:0.162026
+     construction time: 409404354
+
+    -./optimal_polygon -i 100.instance -o outfile -algorithm simulated_annealing -L 1000 -min -annealing local
+     Αποτελέσματα:
+     Optimal Area Polygonization
+     Algorithm: simulated_annealing_-min
+     area_initial:3.84998e+07
+     area:3.63328e+07
+     ratio_initial:0.510048
+     ratio:0.481339
+     construction time: 11400450
+
+    -./optimal_polygon -i 200.instance -o outfile -algorithm simulated_annealing -L 1000 -min -annealing local
+     Αποτελέσματα:
+     Optimal Area Polygonization
+     Algorithm: simulated_annealing_-min
+     area_initial:1.3558e+08
+     area:1.35019e+08
+     ratio_initial:0.498187
+     ratio:0.496127
+     construction time: 12320540
+
+    -./optimal_polygon -i 1000.instance -o outfile -algorithm simulated_annealing -L 1000 -min -annealing local
+     Αποτελέσματα:
+     Optimal Area Polygonization
+     Algorithm: simulated_annealing_-min
+     area_initial:3.871e+07
+     area:3.81326e+07
+     ratio_initial:0.448869
+     ratio:0.442174
+     construction time: 127314189
+
+    -./optimal_polygon -i 20.instance -o outfile -algorithm simulated_annealing -L 1000 -min -annealing global
+     Αποτελέσματα:
+     Optimal Area Polygonization
+     Algorithm: simulated_annealing_-min
+     area_initial:2.9613e+07
+     area:2.31853e+07
+     ratio_initial:0.620068
+     ratio:0.485478
+     construction time: 864117
+
+    -./optimal_polygon -i 40.instance -o outfile -algorithm simulated_annealing -L 1000 -min -annealing global
+     Αποτελέσματα:
+     Optimal Area Polygonization
+     Algorithm: simulated_annealing_-min
+     area_initial:2.55988e+07
+     area:2.55988e+07
+     ratio_initial:0.504218
+     ratio:0.504218
+     construction time: 1638989
+
+    -./optimal_polygon -i 100.instance -o outfile -algorithm simulated_annealing -L 1000 -min -annealing global
+     Αποτελέσματα:
+     Optimal Area Polygonization
+     Algorithm: simulated_annealing_-min
+     area_initial:4.06416e+07
+     area:3.98421e+07
+     ratio_initial:0.538422
+     ratio:0.527831
+     construction time: 15546657
+
+    -./optimal_polygon -i 200.instance -o outfile -algorithm simulated_annealing -L 1000 -max -annealing global
+     Αποτελέσματα:
+     Optimal Area Polygonization
+     Algorithm: simulated_annealing_-max
+     area_initial:1.38003e+08
+     area:1.4745e+08
+     ratio_initial:0.507089
+     ratio:0.541801
+     construction time: 42869270

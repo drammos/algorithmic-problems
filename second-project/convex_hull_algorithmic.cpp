@@ -501,6 +501,5 @@ Polygon_2 convex_hull( vector<Point_2> points, int edge_selection, Segment_2* ed
         polygon = max_area(internal_points, polygon, edge1, edge2);
     }
 
-
     return polygon;
 }

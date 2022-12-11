@@ -62,11 +62,10 @@ bool check_for_lowers(int i, int start, vector<Point_2> points){
 /// @param threshold 
 /// @return 
 Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
-    // RANDOM for 100<= m <= 1000 
-
+    // RANDOM for 10<= m <= 100 
     random_device random_;
     mt19937 generate_(random_());    
-    uniform_int_distribution<> dis_(100, 1000);
+    uniform_int_distribution<> dis_(10, 100);
     int m = dis_(generate_);
 
    

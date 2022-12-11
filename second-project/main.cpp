@@ -16,8 +16,8 @@ int main(int argc, char* argv[]){
     string output_file = argv[4];
 
     // Cout in file
-    // ofstream cout(output_file);
-    // std::cout.rdbuf(cout.rdbuf());
+    ofstream cout(output_file);
+    std::cout.rdbuf(cout.rdbuf());
     
     // Read input file
     vector<Point_2> points;
@@ -46,14 +46,21 @@ int main(int argc, char* argv[]){
     // Close the file
     input_file.close();
     
+    // Start the time
+    int time_start = clock();
 
     string algorithm_2 = argv[6];
     int L = atoi(argv[8]);
     string min_max = argv[9];
-    double threshold = atof(argv[11]);
+
+     cout<<"Optimal Area Polygonization"<<endl;
+
 
     Polygon_2D new_pol;
     string annealing;
+
+    cout<<"Algorithm: "<<algorithm_2<<"_"<<min_max<<endl;
+
 
     if(algorithm_2.compare("simulated_annealing") == 0){
 
@@ -79,12 +86,35 @@ int main(int argc, char* argv[]){
             new_pol = simulated_annealing(polygon, L, min_max, annealing, nullptr, nullptr);
         }
     }
-    else if( algorithm_2.compare("local_search") ){
+    else if( algorithm_2.compare("local_search") == 0){
+        double threshold = atof(argv[11]);
         Polygon_2D polygon = setup(points);
-        cout << "Local search algorithmic" << endl;
+        new_pol = local_search(polygon, L, min_max, threshold);
     }
 
-    cout << new_pol.is_simple() << endl;
+
+    Points vertices = new_pol.vertices();
+    for(int i = 0; i < vertices.size(); i++){
+        cout << vertices.at(i) << endl;
+    }
+
+    for(const Segment_2& e  : new_pol.edges()){
+        cout << e << endl;
+    }
+
+    cout<<"area:"<<new_pol.area()<<endl;
+
+    Polygon_2D KP1;
+    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
+
+    cout<<"ratio:"<<new_pol.area()/KP1.area()<<endl;
+
+    int time_end = clock();
+    int time = time_end - time_start;
+    cout << "construction time: " << time << endl;
+    
+    
+    cout << "\n\nThe polygon is simple: " << new_pol.is_simple() << endl;
     
     return 0;
 }
@@ -93,17 +123,13 @@ int main(int argc, char* argv[]){
 /// @param points 
 /// @return 
 Polygon_2D setup(vector< Point_2> points){
-    // Start the time
-    int time_start = clock();
-
-    cout<<"Polygonization"<<endl;
 
     string algorithm = "convex_hull";
+    // string algorithm = "incremental";
+
     string init = "1a";
     int edge_selection = 1;
     Polygon_2D polygon;
-
-    
 
     if( algorithm.compare("convex_hull") == 0){
         Segment_2* edge1 = nullptr;
@@ -114,24 +140,12 @@ Polygon_2D setup(vector< Point_2> points){
         polygon = incremental(points, edge_selection, init);
     }
 
-    cout<<"Polygonization"<<endl;
-    cout<<"Algorithm: "<<algorithm<<" edge_selection: "<<edge_selection;
+    Polygon_2D KP;
+    CGAL::convex_hull_2(polygon.begin(), polygon.end(), std::back_inserter(KP));
+    double ratio_initial = polygon.area()/KP.area();
 
-    if(!algorithm.compare("incremental")){
-        cout << " initialization: " << init << endl;
-    }
-    else{
-        cout << endl;
-    }
-    int time_end = clock();
+    cout<<"ratio_initial:"<<ratio_initial<<endl;
+    cout<<"area_initial:"<<polygon.area()<<endl;
     
-    int time = time_end - time_start;
-    cout << "area: " << polygon.area() << endl;
-
-    cout << "construction time: " << time << endl;
     return polygon;
 }
-
-
-
-// ./main -i input.txt -o outfile -algorithm simulated_annealing -L 5 -max -threshold 2.2 -annealing subdivision

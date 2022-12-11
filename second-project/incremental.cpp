@@ -323,13 +323,8 @@ Polygon_2D incremental(Points points, int edge_selection, string initialization)
         points.erase(points.begin());
     }
 
-    // for(EdgeIterator it = pol.edges_begin(); it != pol.edges_end(); it++){
-    //     cout<<*it<<endl;
-    // }
-
     Polygon_2D KP;
     CGAL::convex_hull_2(pol.begin(), pol.end(), std::back_inserter(KP));
-    // cout<<pol.is_simple()<<endl;
-    // cout<<"ratio: "<< pol.area()/KP.area() <<endl;
+
     return pol;
 }
