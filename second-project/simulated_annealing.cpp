@@ -328,9 +328,6 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
                     continue;
                 }
 
-                if(*edge1 == right_edge_first_q){
-                    continue;
-                }
 
                 Point_2 p1_ed = left_edge_first_q.point(0);
                 Point_2 p2_ed = left_edge_first_q.point(1);
@@ -342,9 +339,8 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
                     continue;
                 }
 
-                if(*edge1 == left_edge_first_q){
-                    continue;
-                }
+
+
 
                 Point_2 p1_edg = edge_s.point(0);
                 Point_2 p2_edg = edge_s.point(1);
@@ -356,9 +352,6 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
                     continue;
                 }
 
-                if(*edge1 == edge_s){
-                    continue;
-                }
                 
             }
             if(edge2 != nullptr){
@@ -375,9 +368,7 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
                     continue;
                 }
 
-                if(*edge2 == right_edge_first_q){
-                    continue;
-                }
+    
             
                 Point_2 p1_ed = left_edge_first_q.point(0);
                 Point_2 p2_ed = left_edge_first_q.point(1);
@@ -389,10 +380,6 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
                     continue;
                 }
 
-                if(*edge2 == left_edge_first_q){
-                    continue;
-                }
-
                 Point_2 p1_edg = edge_s.point(0);
                 Point_2 p2_edg = edge_s.point(1);
 
@@ -400,10 +387,6 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
                     continue;
                 }
                 if(p1_e2 == p2_edg && p2_e2 == p1_edg){
-                    continue;
-                }
-
-                if(*edge2 == edge_s){
                     continue;
                 }
             }

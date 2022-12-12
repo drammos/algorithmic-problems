@@ -1,6 +1,5 @@
 #include "incremental.hpp"
 #include "convex_hull_algorithmic.hpp"
-#include "../first-project/to_polygon.hpp"
 #include "local_search.hpp"
 #include "simulated_annealing.hpp"
 #include "subdivision.hpp"
@@ -113,8 +112,6 @@ int main(int argc, char* argv[]){
     int time = time_end - time_start;
     cout << "construction time: " << time << endl;
     
-    
-    cout << "\n\nThe polygon is simple: " << new_pol.is_simple() << endl;
     
     return 0;
 }

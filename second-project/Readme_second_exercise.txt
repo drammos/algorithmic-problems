@@ -305,3 +305,10 @@
      ratio_initial:0.507089
      ratio:0.541801
      construction time: 42869270
+
+    ./optimal_polygon -i 1000.instance -o outfile -algorithm simulated_annealing -L 1000 -min -annealing subdivision
+     Optimal Area Polygonization
+     Algorithm: simulated_annealing_-min
+     area:-3.78429e+07
+     ratio:-0.438815
+     construction time: 32930229

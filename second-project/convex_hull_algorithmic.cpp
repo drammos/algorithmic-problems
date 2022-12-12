@@ -327,6 +327,7 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon, Segmen
             edge = edges.at(num_edge);
 
             if(edge1 != nullptr){
+
                 Point_2 p1_e1 = edge1->point(0);
                 Point_2 p2_e1 = edge1->point(1);  
 
@@ -340,9 +341,19 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon, Segmen
                     continue;
                 }
 
-                if(*edge1 == edge){
+
+                if(edge.point(0) == edge1->point(0) && edge.point(1) == edge1->point(1)){
                     continue;
                 }
+                else if(edge.point(0) == edge1->point(1) && edge.point(1) == edge1->point(0)){
+                    continue;
+                }
+                if(*edge1 == edge)
+                {
+                    continue;
+                }
+
+
             }
             if(edge2 != nullptr){
                 Point_2 p1_e2 = edge2->point(0);
@@ -358,9 +369,18 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon, Segmen
                     continue;
                 }
 
-                if(*edge2 == edge){
+                if(edge.point(0) == edge2->point(0) && edge.point(1) == edge2->point(1)){
                     continue;
                 }
+                else if(edge.point(0) == edge2->point(1) && edge.point(1) == edge2->point(0)){
+                    continue;
+                }
+                if(*edge2 == edge)
+                {
+                    continue;
+                }
+
+
             }
             
 
@@ -467,10 +487,15 @@ Polygon_2 convex_hull( vector<Point_2> points, int edge_selection, Segment_2* ed
     // Create the convex hull
     CGAL::convex_hull_2( points.cbegin(), points.cend(), std::back_inserter(result) );
     
+
     // Create the polygon
     Polygon_2 polygon;
     for (pveciterator iter=result.begin(); iter!=result.end(); ++iter){
         polygon.push_back(*iter);
+    }
+
+    if(!polygon.is_clockwise_oriented()){
+        polygon.reverse_orientation();
     }
 
     // Vector with internals_points
@@ -488,6 +513,49 @@ Polygon_2 convex_hull( vector<Point_2> points, int edge_selection, Segment_2* ed
         }
         if( find == false){
             internal_points.push_back(point);
+        }
+    }
+
+    Points remove_points;
+
+    for(int i=0; i < internal_points.size(); i++){
+        Point_2 point = internal_points.at(i);
+        for(
+            EdgeIterator edge = polygon.edges_begin();
+            edge != polygon.edges_end();
+            edge++
+        ){
+            if(edge->has_on(point)){
+
+                for(VertexIterator itr = polygon.vertices_begin();
+                    itr != polygon.vertices_end();
+                    itr++
+                ){
+                    if( itr->x() == edge->point(1).x() && itr->y() == edge->point(1).y()){
+                        polygon.insert(itr, point);
+                        break;         
+                    }    
+                }
+
+                remove_points.push_back(point);
+                break;
+            }
+
+        }
+
+    }
+
+
+    for(int i = 0; i < remove_points.size(); i++){
+        Point_2 point = remove_points.at(i);
+        for(VertexIterator itr = internal_points.begin();
+            itr != internal_points.end();
+            itr++
+        ){
+            if( itr->x() == point.x() && itr->y() == point.y()){
+                internal_points.erase(itr);
+                break;
+            }
         }
     }
 

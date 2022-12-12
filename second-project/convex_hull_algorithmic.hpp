@@ -16,6 +16,7 @@ typedef std::vector<Point_2>::iterator pveciterator;
 typedef CGAL::Polygon_2<K> Polygon_2;
 typedef K::Segment_2 Segment_2;
 typedef Polygon_2::Vertex_iterator VertexIterator;
+typedef Polygon_2::Edge_const_iterator EdgeIterator;
 
 
 Polygon_2 convex_hull(vector<Point_2>, int, Segment_2*, Segment_2*);

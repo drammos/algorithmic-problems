@@ -26,10 +26,6 @@ bool check_for_lowers(int i, int start, vector<Point_2> points){
 
     bool find = false;
     Point_2 point = points.at(i);
-    if(start == 0){
-        start = -1;
-    }
-    // Check for left side
     for(int num = start + 1; num < i; num++){
         Point_2 p = points.at(num);
         if(p.y() < point.y()){
@@ -63,11 +59,11 @@ bool check_for_lowers(int i, int start, vector<Point_2> points){
 /// @return 
 Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
     // RANDOM for 10<= m <= 100 
+
     random_device random_;
     mt19937 generate_(random_());    
     uniform_int_distribution<> dis_(10, 100);
     int m = dis_(generate_);
-
    
     // Sort the points
     sort(points.begin(), points.end(), check_the_x);
@@ -75,7 +71,6 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
     vector<struct Spal*> spals;
     int vertices_size = points.size();
     int i_vertices = 0;
-    int num = 0;
     int num_from_spal = 1;
     
 
@@ -84,6 +79,9 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
         Spal* spal = new struct Spal;
         spal->is_first = false;
         spal->is_last = false;
+        spal->edge_left = Segment_2(Point_2(0,0),Point_2(0,1));
+        spal->edge_right = Segment_2(Point_2(0,0),Point_2(0,1));
+
         spal->number = num_from_spal;
         int num = 1;
                 
@@ -94,14 +92,12 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
 
             // Check is first and save it
             if(num == 1){
+                spal->left = point;
                 spal->first_in_spal = i;
                 if(i == 0){
-                    spal->left = point;
                     spal->is_first = true;
                 }
                 else{
-                    // is the first from new spal
-                    spal->left = point;
                     spal->is_first = false;
                 }
             }
@@ -122,7 +118,7 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
                 }
                 // Check for lowers points from left and right side in pointset
                 bool find_lowers =  check_for_lowers(i, spal->first_in_spal, points);
-                if(find_lowers){
+                if(find_lowers == true){
                     spal->right = point;
                     i_vertices = i;
                     break;
@@ -132,23 +128,25 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
         }   
         spals.push_back(spal);
         num_from_spal++;
-        if(last){
+         
+        if(last == true){
             break;
         }
 
     }
 
-
     for(int num = 0; num < spals.size(); num++){
         Spal* spal = spals.at(num);
         vector<Point_2> spal_points = spal->points;
-        Points result;
+
+        Points result1;
 
         // Create the convex hull
-        CGAL::convex_hull_2(spal_points.begin(), spal_points.end(), std::back_inserter(result));
+        CGAL::convex_hull_2(spal_points.begin(), spal_points.end(), std::back_inserter(result1));
         // Create the polygon
+      
         Polygon_2D polygon;
-        for (pveciterator iter=result.begin(); iter!=result.end(); ++iter){
+        for (pveciterator iter=result1.begin(); iter!=result1.end(); ++iter){
             polygon.push_back(*iter);
         }
 
@@ -156,124 +154,73 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
         if(!polygon.is_clockwise_oriented()){
             polygon.reverse_orientation();
         }
-        result = polygon.vertices();
+        Points result = polygon.vertices();
 
-        if(spal->is_first){
-            Point_2 right_point = spal->right;          
-            
-            for(int i = 0; i < result.size(); i++){
-                
-                Point_2 the_point = result.at(i);
-                if(right_point == the_point){
-                    if( i == result.size() - 1){
-                        Point_2 next = result.at(0);
-                        spal->edge_right = Segment_2(next, right_point);
-                    }
-                    else{
-                        Point_2 next = result.at(i+1);
-                        spal->edge_right = Segment_2(next, right_point);
-                    }
+        Point_2 right_point = spal->right;          
+        Point_2 left_point = spal->left;
+
+        for(int i = 0; i < result.size(); i++){
+            Point_2 the_point = result.at(i);
+            if(right_point == the_point){
+
+                if( i == result.size() - 1){
+                    Point_2 next = result.at(0);
+                    spal->edge_right = Segment_2(right_point, next);
                 }
-            }
-        }
-        else if(spal->is_last){
-            Point_2 left_point = spal->left;          
-            
-            for(int i = 0; i < result.size(); i++){
-                
-                Point_2 the_point = result.at(i);
-                if(left_point == the_point){
-                    if( i == 0){
-                        Point_2 next = result.at(result.size() - 1);
-                        spal->edge_left = Segment_2(left_point, next);
-                    }
-                    else{
-                        Point_2 next = result.at(i+1);
-                        spal->edge_left = Segment_2(left_point, next);
-                    }
+                else{
+                    Point_2 next = result.at(i+1);
+                    spal->edge_right = Segment_2(right_point, next);
                 }
             }
 
-        }
-        else{
-            Point_2 right_point = spal->right;          
-            Point_2 left_point = spal->left;
-            for(int i = 0; i < result.size(); i++){
-                
-                Point_2 the_point = result.at(i);
-                if(right_point == the_point){
-                    if( i == result.size() - 1){
-                        Point_2 next = result.at(0);
-                        spal->edge_right = Segment_2(right_point, next);
-                    }
-                    else{
-                        Point_2 next = result.at(i+1);
-                        spal->edge_right = Segment_2(right_point, next);
-                    }
+            if(left_point == the_point){
+                if( i == 0){
+                    Point_2 previous = result.at(result.size() - 1);
+                    spal->edge_left = Segment_2(left_point, previous);
                 }
-
-                if(left_point == the_point){
-                    if( i == 0){
-                        Point_2 next = result.at(result.size() - 1);
-                        spal->edge_left = Segment_2(left_point, next);
-                    }
-                    else{
-                        Point_2 next = result.at(i+1);
-                        spal->edge_left = Segment_2(left_point, next);
-                    }
+                else{
+                    Point_2 previous = result.at(i-1);
+                    spal->edge_left = Segment_2(left_point, previous);
                 }
             }
-            // vrisko akmes kai gia ta duo
+
         }
 
         Polygon_2D new_polygon_convex;
-        Segment_2* edge1;
-        Segment_2* edge2;
-
-        // Call convex hull algorithm
-        if(spal->is_first){
-            edge1 =  new Segment_2;
-            *edge1 = spal->edge_right;
-            edge2 = nullptr;
-
-            new_polygon_convex = convex_hull(spal->points, 1, edge1, edge2);
-
-        }
-        else if(spal->is_last){
-            edge2 =  new Segment_2;
-            *edge2 = spal->edge_left;
-            edge1 = nullptr;
-
-            new_polygon_convex = convex_hull(spal->points, 1, edge1, edge2);
-        }
-        else{
-            edge1 =  new Segment_2;
-            *edge1 = spal->edge_right;
-            edge2 =  new Segment_2;
-            *edge2 = spal->edge_left;
-
-            new_polygon_convex = convex_hull(spal->points, 1, edge1, edge2);
+        Segment_2 el = spal->edge_left;
+        Segment_2 er = spal->edge_right;
+        new_polygon_convex = convex_hull(spal_points, 1, &el, &er);
+        if(!new_polygon_convex.is_clockwise_oriented()){
+            new_polygon_convex.reverse_orientation();
         }
 
+        Polygon_2D p1 = new_polygon_convex;
+    
         // Call global
-        Polygon_2D new_pol_simulated = simulated_annealing(new_polygon_convex, L, min_max, "global", edge1, edge2);        
-        
+        Polygon_2D new_pol_simulated = simulated_annealing(new_polygon_convex, L, min_max, "global", &spal->edge_right, &spal->edge_left);        
+
         if(!new_pol_simulated.is_clockwise_oriented()){
             new_pol_simulated.reverse_orientation();
         }
 
-        spal->points_polygon = new_pol_simulated.vertices();
+        spal->points_polygon = new_pol_simulated.vertices();    
     }
 
+
     Points last_points_list;
+    Polygon_2D last_p1;
 
     for(int num = 0; num < spals.size(); num++){
         Spal* spal = spals.at(num);
         Points points_polygon = spal->points_polygon;
-        Point_2 left = spal->left;
-        Point_2 right = spal->right;
+        
+        
+        Point_2 left = spal->left; // aristera
+        Point_2 right = spal->right; // dekia
+
 
         int start = 0;
+
         for(int i = 0; i < points_polygon.size(); i++){
             if(left == points_polygon.at(i)){
                 last_points_list.push_back(left);
@@ -293,7 +240,7 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
             last_points_list.push_back(point);
         }
 
-        if(!find_right){
+        if(find_right == false){
             for(int i = 0; i < points_polygon.size(); i++){
                 Point_2 point = points_polygon.at(i);
                 if(right == point){
@@ -304,8 +251,6 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
         }
     }
 
-    // exo valei ola ta panw ta aristera kathena left kai ta koina
-    // tora eimai terma deksia sto arisero tou teleutaiou kai prepei na to kanw anapoda
     int inter = last_points_list.size() - 1;
     for(int num = spals.size() - 1; num >= 0; num--){
         Spal* spal = spals.at(num);
@@ -316,7 +261,8 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
         int start = 0;
         for(int i = 0; i < points_polygon.size(); i++){
             if(right == points_polygon.at(i)){
-                if(spal->is_last){
+                if(spal->is_last == true){
+                    last_p1.push_back(right);
                     last_points_list.push_back(right);
                 }
                 start = i + 1;
@@ -332,7 +278,6 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
                 find_left = true;
                 break;
             }
-
             last_points_list.push_back(point);
         }
 
@@ -342,7 +287,6 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
                 if(left == point){
                     break;
                 }
-
                 last_points_list.push_back(point);
             }
         }
@@ -353,6 +297,8 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
     for (pveciterator iter=last_points_list.begin(); iter!=last_points_list.end(); ++iter){
         polygon_last.push_back(*iter);
     }  
+
+    // local
 
     return polygon_last;
 }
