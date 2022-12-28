@@ -128,7 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-/CMakeFiles
+CMakeFiles/
+build/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
 *.instance
 *.CMakeFiles
 
