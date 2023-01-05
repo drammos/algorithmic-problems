@@ -114,6 +114,7 @@ int main(int argc, char* argv[]){
     int time = time_end - time_start;
     cout << "construction time: " << time << endl;
     
+    cout << "\nIs simple: " << new_pol.is_simple() << endl;
     
     return 0;
 }

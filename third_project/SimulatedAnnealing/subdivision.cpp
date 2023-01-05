@@ -144,18 +144,83 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
 
         // Create the convex hull
         CGAL::convex_hull_2(spal_points.begin(), spal_points.end(), std::back_inserter(result1));
+
         // Create the polygon
-      
-        Polygon_2D polygon;
+        Polygon_2 polygon_1;
         for (pveciterator iter=result1.begin(); iter!=result1.end(); ++iter){
-            polygon.push_back(*iter);
+            polygon_1.push_back(*iter);
+        }
+
+        if(!polygon_1.is_clockwise_oriented()){
+            polygon_1.reverse_orientation();
+        }
+
+        // Vector with internals_points
+        vector<Point_2> internal_points;
+        
+        // Find internal points
+        for(int i = 0; i < points.size(); i++){
+            Point_2 point = points.at(i);
+            bool find = false;
+            for (pveciterator iter=result1.begin(); iter!=result1.end(); ++iter){
+                if( point == *iter){
+                    find = true;
+                    break;
+                }
+            }
+            if( find == false){
+                internal_points.push_back(point);
+            }
+        }
+
+        Points remove_points;
+
+        for(int i=0; i < internal_points.size(); i++){
+            Point_2 point = internal_points.at(i);
+            for(
+                EdgeIterator edge = polygon_1.edges_begin();
+                edge != polygon_1.edges_end();
+                edge++
+            ){
+                if(edge->has_on(point)){
+
+                    for(VertexIterator itr = polygon_1.vertices_begin();
+                        itr != polygon_1.vertices_end();
+                        itr++
+                    ){
+                        if( itr->x() == edge->point(1).x() && itr->y() == edge->point(1).y()){
+                            polygon_1.insert(itr, point);
+                            break;         
+                        }    
+                    }
+
+                    remove_points.push_back(point);
+                    break;
+                }
+
+            }
+
         }
 
 
-        if(!polygon.is_clockwise_oriented()){
-            polygon.reverse_orientation();
+        for(int i = 0; i < remove_points.size(); i++){
+            Point_2 point = remove_points.at(i);
+            for(VertexIterator itr = internal_points.begin();
+                itr != internal_points.end();
+                itr++
+            ){
+                if( itr->x() == point.x() && itr->y() == point.y()){
+                    internal_points.erase(itr);
+                    break;
+                }
+            }
         }
-        Points result = polygon.vertices();
+
+        ///
+        //////////////////
+      
+
+        Points result = polygon_1.vertices();
 
         Point_2 right_point = spal->right;          
         Point_2 left_point = spal->left;
