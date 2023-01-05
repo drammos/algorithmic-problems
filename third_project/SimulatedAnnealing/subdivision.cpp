@@ -366,5 +366,10 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max){
 
     // local
 
+
+    if(!polygon_last.is_collinear_oriented()){
+        polygon_last.reverse_orientation();
+    }
+
     return polygon_last;
 }
