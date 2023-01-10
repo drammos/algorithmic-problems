@@ -17,8 +17,8 @@ int main(int argc, char* argv[]){
     string output_file = argv[4];
 
     // Cout in file
-    ofstream cout(output_file);
-    std::cout.rdbuf(cout.rdbuf());
+    // ofstream cout(output_file);
+    // std::cout.rdbuf(cout.rdbuf());
     
     // Read input file
     vector<Point_2> points;
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]){
     if(algorithm_2.compare("simulated_annealing") == 0){
 
         annealing = argv[11];
-
+cout << "BIKA =1 \n";
         if(annealing.compare("subdivision") == 0){
             if(points.size() < 1000){
                 string step;
@@ -79,6 +79,8 @@ int main(int argc, char* argv[]){
                 Polygon_2D polygon = setup(points);
                 new_pol = simulated_annealing(polygon, L, min_max, step, nullptr, nullptr);
             }
+cout << "BIKA =2 \n";
+
             new_pol = subdivision(points, L, min_max);
 
         }
@@ -134,7 +136,9 @@ Polygon_2D setup(vector< Point_2> points){
     if( algorithm.compare("convex_hull") == 0){
         Segment_2* edge1 = nullptr;
         Segment_2* edge2 = nullptr;
-        polygon = convex_hull(points, edge_selection, edge1, edge2);
+        Polygon_2 pol;
+        
+        polygon = convex_hull(points, edge_selection, pol, false, edge1, edge2);
     }
     else{
         polygon = incremental(points, edge_selection, init);

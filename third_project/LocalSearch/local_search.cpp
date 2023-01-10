@@ -78,7 +78,8 @@ Polygon_2D change_path(vector<Point_2> path, Segment_2 edge, Polygon_2D pol){
 }
 
 
-Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold){
+Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold, int cut_off){
+    // int time_start = clock();
 
     if(L >= pol.edges().size()){
         perror("L is too high");
@@ -90,12 +91,23 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold)
     while(dif >= threshold){
         prev = best;
         vector<Point_2> vertices;
+
+        int time_start1 = clock();
         for(const Point_2& v  : best.vertices())
             vertices.push_back(v);
 
         //finding all the possible paths of the polygon
         list<vector<Point_2>> paths = find_paths(vertices, L);
         vector<Polygon_2D> alternatives;
+        int time_end1 = clock();
+        int time1 = time_end1 - time_start1;
+        cut_off -= time1;
+
+        if(cut_off<0){
+            exit(EXIT_FAILURE);
+        }
+
+        int time_start2 = clock();
 
         for(vector<Point_2> path: paths){
             
@@ -121,6 +133,13 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold)
                 }
             }
         }
+        
+        int time_end2 = clock();
+        int time2 = time_end2 - time_start2;
+        cut_off -= time2;
+
+
+        int time_start3 = clock();
         if(alternatives.size() > 0){
             //finding polygon of min or max area
             if(!min_max.compare("-min")){
@@ -152,9 +171,22 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold)
                     best = max_pol;
             }
         }
+        
+        int time_end3 = clock();
+        int time3 = time_end3 - time_start3;
+        cut_off -= time3;
+        
         dif = abs(best.area() - prev.area());
     }
     best = prev;
     
+    // int time_end = clock();
+    // int time = time_end - time_start;
+    // cut_off -= time;
+    
+    if(cut_off < 0){
+        exit(EXIT_FAILURE);
+    }
+
     return best;
 }
