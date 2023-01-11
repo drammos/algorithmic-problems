@@ -102,7 +102,11 @@ int main(int argc, char* argv[]){
     for(const Segment_2& e  : new_pol.edges()){
         cout << e << endl;
     }
+    
+    if(new_pol.orientation() == -1){
+        new_pol.reverse_orientation();
 
+    }
     cout<<"area:"<<new_pol.area()<<endl;
 
     Polygon_2D KP1;

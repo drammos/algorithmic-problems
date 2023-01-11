@@ -415,6 +415,41 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
             }
         }
 
+        // Segment_2 seg1(previous_point_first, next_point_first);
+        // Segment_2 seg2(point_second, point_first);
+        // Segment_2 seg3(point_first, next_point_second);
+        // if(!CGAL::do_intersect(seg1, seg2) && !CGAL::do_intersect(seg1, seg3)){
+        //     // cout<<"here"<<endl;
+        //     EdgeIterator it;
+        //     for(it = new_pol.edges_begin(); it != new_pol.edges_end(); it++){
+        //         if(*it != seg1 && *it != seg2 && *it != seg3){
+        //             if(it->point(1) == point_second){
+        //                 if(CGAL::do_intersect(seg1, *it) || CGAL::do_intersect(seg3, *it)){
+        //                     break;
+        //                 }
+        //             }
+        //             else if(it->point(0) == next_point_second){
+        //                 if(CGAL::do_intersect(seg2, *it) || CGAL::do_intersect(seg1, *it)){
+        //                     break;
+        //                 }
+        //             }
+        //             else if(it->point(1) == previous_point_first || it->point(0) == next_point_first){
+        //                 if(CGAL::do_intersect(seg2, *it) || CGAL::do_intersect(seg3, *it)){
+        //                     break;
+        //                 }
+        //             }
+        //             else{
+        //                 if(CGAL::do_intersect(seg2, *it) || CGAL::do_intersect(seg3, *it) || CGAL::do_intersect(seg1, *it)){
+        //                     break;
+        //                 }
+        //             }
+                    
+        //         }
+        //     }
+        //     if(it == new_pol.edges_end()){
+        //         valid = true;
+        //     }
+        // }
         if(new_pol.is_simple()){
             valid = true;
         }
