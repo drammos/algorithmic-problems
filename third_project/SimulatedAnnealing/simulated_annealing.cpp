@@ -183,7 +183,7 @@ Polygon_2D local_algorithm(Polygon_2D polygon, int vertices_size, vector<Point_2
 
     do{
 
-        int time_start1 = clock();
+        // int time_start1 = clock();
         int my_rand = rand();
 
         // Points vertices = polygon.
@@ -251,12 +251,12 @@ Polygon_2D local_algorithm(Polygon_2D polygon, int vertices_size, vector<Point_2
 
         result = check_the_polygon(new_polygon, points_in_box);
 
-        int time_end1 = clock();
-        int time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // int time_end1 = clock();
+        // int time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
     } while(result == false);
 
     return new_polygon;
@@ -279,7 +279,7 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
     bool valid = false;
     Polygon_2D new_pol;
     while(valid == false){
-        int time_start1 = clock();
+        // int time_start1 = clock();
         new_pol = pol;
 
         int size = vertices.size();
@@ -429,12 +429,12 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
             valid = true;
         }
 
-        int time_end1 = clock();
-        int time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // int time_end1 = clock();
+        // int time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
     }
 
     return new_pol;
@@ -489,7 +489,7 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string
     while(temperature >= 0){
         polygon_energy = new_pol_energy;
         // double new_energy;
-        int time_start1 = clock();
+        // int time_start1 = clock();
         Polygon_2D new_pol;
         if(annealing.compare("local") == 0){
             new_pol = local_algorithm(new_polygon, vertices_size, internal_points, cut_off);
@@ -497,12 +497,12 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string
         else{
             new_pol = global_step(new_polygon, min_max, edge1, edge2, cut_off);
         }
-        int time_end1 = clock();
-        int time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // int time_end1 = clock();
+        // int time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
 
         // Energy for new
         

@@ -66,10 +66,11 @@ int main(int argc, char* argv[]){
     if(algorithm_2.compare("simulated_annealing") == 0){
 
         annealing = argv[11];
-cout << "BIKA =1 \n";
+
         if(annealing.compare("subdivision") == 0){
             if(points.size() < 1000){
                 string step;
+
                 if(points.size()%2 == 0){
                     step = "local";
                 }
@@ -77,22 +78,21 @@ cout << "BIKA =1 \n";
                     step = "global";
                 }
                 Polygon_2D polygon = setup(points);
-                new_pol = simulated_annealing(polygon, L, min_max, step, nullptr, nullptr);
+                new_pol = simulated_annealing(polygon, L, min_max, step, nullptr, nullptr, 1000000);
             }
-cout << "BIKA =2 \n";
 
-            new_pol = subdivision(points, L, min_max);
+            new_pol = subdivision(points, L, min_max, 1000000);
 
         }
         else{
             Polygon_2D polygon = setup(points);
-            new_pol = simulated_annealing(polygon, L, min_max, annealing, nullptr, nullptr);
+            new_pol = simulated_annealing(polygon, L, min_max, annealing, nullptr, nullptr, 1000000);
         }
     }
     else if( algorithm_2.compare("local_search") == 0){
         double threshold = atof(argv[11]);
         Polygon_2D polygon = setup(points);
-        new_pol = local_search(polygon, L, min_max, threshold);
+        new_pol = local_search(polygon, L, min_max, threshold, 10000000);
     }
 
 
@@ -136,7 +136,7 @@ Polygon_2D setup(vector< Point_2> points){
     if( algorithm.compare("convex_hull") == 0){
         Segment_2* edge1 = nullptr;
         Segment_2* edge2 = nullptr;
-        Polygon_2 pol;
+        Polygon_2* pol = nullptr;
         
         polygon = convex_hull(points, edge_selection, pol, false, edge1, edge2);
     }

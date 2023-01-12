@@ -481,7 +481,7 @@ Polygon_2 random_edge(vector<Point_2> internal_points, Polygon_2 polygon, Segmen
 /// @return 
 Polygon set_up( vector<Point_2> points){
     Points result;
-    cout << "Set up from 1\n";
+
     // Create the convex hull
     CGAL::convex_hull_2( points.cbegin(), points.cend(), std::back_inserter(result) );
     
@@ -572,7 +572,6 @@ Polygon_2 convex_hull( vector<Point_2> points, int edge_selection, Polygon_2* po
     Polygon_2 polygon;
     Points internal_points;
     
-    cout << "conv hull here\n";
     if(setup == true){
         Polygon pol = set_up(points);
 
@@ -580,11 +579,9 @@ Polygon_2 convex_hull( vector<Point_2> points, int edge_selection, Polygon_2* po
         internal_points = pol.internals;
     }
     else{
-        cout << "here ccc\n";
         internal_points = points;
-        polygon = polygon_from_sub;
+        polygon = *polygon_from_sub;
     }
-    cout << "conv hull out \n";
 
 
     if( edge_selection == 1){

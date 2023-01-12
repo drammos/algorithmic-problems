@@ -84,7 +84,7 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
 
         spal->number = num_from_spal;
         int num = 1;
-        int time_start1 = clock();     
+        // int time_start1 = clock();     
         for(int i = i_vertices; i < points.size(); i++){    
             // Add point in points for spal
             Point_2 point = points.at(i);
@@ -128,12 +128,12 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         }   
         spals.push_back(spal);
         
-        int time_end1 = clock();
-        int time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // int time_end1 = clock();
+        // int time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
 
         num_from_spal++;
          
@@ -146,15 +146,14 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
     for(int num = 0; num < spals.size(); num++){
         Spal* spal = spals.at(num);
         vector<Point_2> spal_points = spal->points;
-
         Points result1;
 
         // Create the convex hull
         CGAL::convex_hull_2(spal_points.begin(), spal_points.end(), std::back_inserter(result1));
-
+        
         // Create the polygon
         Polygon_2 polygon_1;
-        int time_start1 = clock();
+        // int time_start1 = clock();
         for (pveciterator iter=result1.begin(); iter!=result1.end(); ++iter){
             polygon_1.push_back(*iter);
         }
@@ -167,8 +166,8 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         vector<Point_2> internal_points;
         
         // Find internal points
-        for(int i = 0; i < points.size(); i++){
-            Point_2 point = points.at(i);
+        for(int i = 0; i < spal_points.size(); i++){
+            Point_2 point = spal_points.at(i);
             bool find = false;
             for (pveciterator iter=result1.begin(); iter!=result1.end(); ++iter){
                 if( point == *iter){
@@ -224,19 +223,19 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
             }
         }
 
-        int time_end1 = clock();
-        int time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // int time_end1 = clock();
+        // int time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
 
         Points result = polygon_1.vertices();
 
         Point_2 right_point = spal->right;          
         Point_2 left_point = spal->left;
 
-        time_start1 = clock();
+        // time_start1 = clock();
         for(int i = 0; i < result.size(); i++){
             Point_2 the_point = result.at(i);
             if(right_point == the_point){
@@ -263,46 +262,51 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
             }
 
         }
-        time_end1 = clock();
-        time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // time_end1 = clock();
+        // time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
         Polygon_2D new_polygon_convex;
         Segment_2 el = spal->edge_left;
         Segment_2 er = spal->edge_right;
-        time_start1 = clock();
-        
+        // time_start1 = clock();
+
         new_polygon_convex = convex_hull(internal_points, 1, &polygon_1, false,  &el, &er);
-        
-        time_end1 = clock();
-        time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+
+        // time_end1 = clock();
+        // time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
 
         if(!new_polygon_convex.is_clockwise_oriented()){
             new_polygon_convex.reverse_orientation();
         }
 
         Polygon_2D p1 = new_polygon_convex;
+       
 
-        time_start1 = clock();
+        // time_start1 = clock();
         // Call global
         Polygon_2D new_pol_simulated = simulated_annealing(new_polygon_convex, L, min_max, "global", &spal->edge_right, &spal->edge_left, cut_off);        
+
 
         if(!new_pol_simulated.is_clockwise_oriented()){
             new_pol_simulated.reverse_orientation();
         }
+
+
         spal->points_polygon = new_pol_simulated.vertices();  
-        time_end1 = clock();
-        time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }  
+        // time_end1 = clock();
+        // time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }  
+
     }
 
     Points last_points_list;
@@ -318,7 +322,7 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
 
 
         int start = 0;
-        int time_start1 = clock();
+        // int time_start1 = clock();
         for(int i = 0; i < points_polygon.size(); i++){
             if(left == points_polygon.at(i)){
                 last_points_list.push_back(left);
@@ -326,16 +330,16 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
                 break;
             }
         }
-        int time_end1 = clock();
-        int time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // int time_end1 = clock();
+        // int time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
 
         // start
         bool find_right = false;
-        time_start1 = clock();
+        // time_start1 = clock();
         for(int i = start; i < points_polygon.size(); i++){
             Point_2 point = points_polygon.at(i);
             if(right == point){
@@ -344,16 +348,16 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
             }
             last_points_list.push_back(point);
         }
-        time_end1 = clock();
-        time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // time_end1 = clock();
+        // time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
         
         
         //
-        time_start1 = clock();
+        // time_start1 = clock();
         if(find_right == false){
             for(int i = 0; i < points_polygon.size(); i++){
                 Point_2 point = points_polygon.at(i);
@@ -363,12 +367,12 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
                 last_points_list.push_back(point);
             }
         }
-        time_end1 = clock();
-        time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // time_end1 = clock();
+        // time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
     }
 
     int inter = last_points_list.size() - 1;
@@ -379,7 +383,7 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         Point_2 right = spal->right;
 
         int start = 0;
-        int time_start1 = clock();
+        // int time_start1 = clock();
         for(int i = 0; i < points_polygon.size(); i++){
             if(right == points_polygon.at(i)){
                 if(spal->is_last == true){
@@ -391,18 +395,18 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
             }
         }
 
-        int time_end1 = clock();
-        int time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // int time_end1 = clock();
+        // int time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
 
         
 
         // start
         bool find_left = false;
-        time_start1 = clock();
+        // time_start1 = clock();
         for(int i = start; i < points_polygon.size(); i++){
             Point_2 point = points_polygon.at(i);
             if(left == point){
@@ -411,14 +415,14 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
             }
             last_points_list.push_back(point);
         }
-        time_end1 = clock();
-        time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // time_end1 = clock();
+        // time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
 
-        time_start1 = clock();
+        // time_start1 = clock();
         if(!find_left){
             for(int i = 0; i < points_polygon.size(); i++){
                 Point_2 point = points_polygon.at(i);
@@ -428,12 +432,12 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
                 last_points_list.push_back(point);
             }
         }
-        time_end1 = clock();
-        time1 = time_end1 - time_start1;
-        cut_off -= time1;
-        if(cut_off < 0){
-            exit(EXIT_FAILURE);
-        }
+        // time_end1 = clock();
+        // time1 = time_end1 - time_start1;
+        // cut_off -= time1;
+        // if(cut_off < 0){
+        //     exit(EXIT_FAILURE);
+        // }
 
     }
 
