@@ -268,6 +268,7 @@ Polygon_2D incremental(Points points, int edge_selection, string initialization)
     Polygon_2D pol;
     sorting(points, initialization);
 
+
     //Building initial triangle
     pol.push_back(points.at(0));
     pol.push_back(points.at(1));
@@ -276,6 +277,7 @@ Polygon_2D incremental(Points points, int edge_selection, string initialization)
     points.erase(points.begin());
     points.erase(points.begin());
     points.erase(points.begin());
+
 
     while(points.size() > 0){
         //finding red edges

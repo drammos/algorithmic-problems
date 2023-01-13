@@ -14,6 +14,7 @@ bool compare(string file1, string file2){
     int count1 = 0;
     while (getline(file, line))
         count1++;
+    file.close();
     file.open(file2);
     int count2 = 0;
 
@@ -22,28 +23,41 @@ bool compare(string file1, string file2){
     return count1<count2;
 }
 
-void local_search_results(Polygon_2D pol, double& sum_min, double& sum_max, double& bound_min, double& bound_max){
-    Polygon_2D new_pol = local_search(pol,3,"-min",0.3);
-    if(new_pol.orientation() == -1){
-        new_pol.reverse_orientation();
-    }
-    Polygon_2D KP1;
-    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
+void local_search_results(Polygon_2D pol, double& sum_min, double& sum_max, double& bound_min, double& bound_max, double cutoff){
+    Polygon_2D new_pol = local_search(pol,3,"-min",0.3, cutoff);
+    
+    double ratio1;
+    if(new_pol.size() == 1)
+        ratio1 = 1.0;
+    else{
+        if(new_pol.orientation() == -1){
+            new_pol.reverse_orientation();
+        }
+        Polygon_2D KP1;
+        CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
+        ratio1 = new_pol.area()/KP1.area();
 
-    double ratio1 = new_pol.area()/KP1.area();
+    }
     sum_min+=ratio1;
     if(ratio1 > bound_min){
         bound_min = ratio1;
     }
 
-    new_pol = local_search(pol,3,"-max",0.3);
-    if(new_pol.orientation() == -1){
-        new_pol.reverse_orientation();
-    }
+    double ratio2;
+    new_pol = local_search(pol,3,"-max",0.3, cutoff);
+    if(new_pol.size() == 1)
+        ratio2 = 0.0;
+    else{
+        if(new_pol.orientation() == -1){
+            new_pol.reverse_orientation();
+        }
 
-    Polygon_2D KP2;
-    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP2));
-    double ratio2 = new_pol.area()/KP2.area();
+        Polygon_2D KP2;
+        CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP2));
+        ratio2 = new_pol.area()/KP2.area();
+
+    }
+    
 
     sum_max+=ratio2;
     if(ratio1 < bound_max){
@@ -52,90 +66,128 @@ void local_search_results(Polygon_2D pol, double& sum_min, double& sum_max, doub
 
 }
 
-void annealing_local_step(Polygon_2D pol, double& sum_min, double& sum_max, double& bound_min, double& bound_max){
-    Polygon_2D new_pol = simulated_annealing(pol, 1000, "-min", "local", nullptr, nullptr);
-    if(new_pol.orientation() == -1){
-        new_pol.reverse_orientation();
-    }
-    Polygon_2D KP1;
-    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
-    double ratio1 = new_pol.area()/KP1.area();
+void annealing_local_step(Polygon_2D pol, double& sum_min, double& sum_max, double& bound_min, double& bound_max, double cutoff){
+    Polygon_2D new_pol = simulated_annealing(pol, 1000, "-min", "local", nullptr, nullptr, cutoff);
+    double ratio1;
+    if(new_pol.size() == 1)
+        ratio1 = 1.0;
+    else{
+        if(new_pol.orientation() == -1){
+            new_pol.reverse_orientation();
+        }
+        Polygon_2D KP1;
+        CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
+        ratio1 = new_pol.area()/KP1.area();
 
+    }
     sum_min+=ratio1;
     if(ratio1 > bound_min){
         bound_min = ratio1;
     }
+    new_pol = simulated_annealing(pol, 1000, "-max", "local", nullptr, nullptr, cutoff);
+    double ratio2;
+    if(new_pol.size() == 1)
+        ratio2 = 0.0;
+    else{
+        if(new_pol.orientation() == -1){
+            new_pol.reverse_orientation();
+        }
 
-    new_pol = simulated_annealing(pol, 1000, "-max", "local", nullptr, nullptr);
-    if(new_pol.orientation() == -1){
-        new_pol.reverse_orientation();
+        Polygon_2D KP2;
+        CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP2));
+        ratio2 = new_pol.area()/KP2.area();
     }
-    Polygon_2D KP2;
-    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP2));
-    double ratio2 = new_pol.area()/KP2.area();
+    
 
     sum_max+=ratio2;
-    if(ratio2 < bound_max){
-        bound_max = ratio2;
+    if(ratio1 < bound_max){
+        bound_max= ratio2;
     }
 
 }
 
-void annealing_global_step(Polygon_2D pol, double& sum_min, double& sum_max, double& bound_min, double& bound_max){
-    Polygon_2D new_pol = simulated_annealing(pol, 1000, "-min", "global", nullptr, nullptr);
-    if(new_pol.orientation() == -1){
-        new_pol.reverse_orientation();
-    }
-    Polygon_2D KP1;
-    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
-    double ratio1 = new_pol.area()/KP1.area();
+void annealing_global_step(Polygon_2D pol, double& sum_min, double& sum_max, double& bound_min, double& bound_max, double cutoff){
+    Polygon_2D new_pol = simulated_annealing(pol, 1000, "-min", "global", nullptr, nullptr, cutoff);
+    double ratio1;
+    if(new_pol.size() == 1)
+        ratio1 = 1.0;
+    else{
+        if(new_pol.orientation() == -1){
+            new_pol.reverse_orientation();
+        }
+        Polygon_2D KP1;
+        CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
+        ratio1 = new_pol.area()/KP1.area();
 
+    }
     sum_min+=ratio1;
     if(ratio1 > bound_min){
         bound_min = ratio1;
     }
 
-    new_pol = simulated_annealing(pol, 1000, "-max", "global", nullptr, nullptr);
-    if(new_pol.orientation() == -1){
-        new_pol.reverse_orientation();
+
+    new_pol = simulated_annealing(pol, 1000, "-max", "global", nullptr, nullptr, cutoff);
+
+    double ratio2;
+    if(new_pol.size() == 1)
+        ratio2 = 0.0;
+    else{
+        if(new_pol.orientation() == -1){
+            new_pol.reverse_orientation();
+        }
+
+        Polygon_2D KP2;
+        CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP2));
+        ratio2 = new_pol.area()/KP2.area();
     }
-    Polygon_2D KP2;
-    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP2));
-    double ratio2 = new_pol.area()/KP2.area();
+    
 
     sum_max+=ratio2;
-    if(ratio2 < bound_max){
-        bound_max = ratio2;
+    if(ratio1 < bound_max){
+        bound_max= ratio2;
     }
 
 }
 
-void convex_hull_subdivision(Polygon_2D pol, double& sum_min, double& sum_max, double& bound_min, double& bound_max){
-    Polygon_2D new_pol = simulated_annealing(pol, 1000, "-min", "subdivision", nullptr, nullptr);
-    if(new_pol.orientation() == -1){
-        new_pol.reverse_orientation();
-    }
-    Polygon_2D KP1;
-    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
-    double ratio1 = new_pol.area()/KP1.area();
+void convex_hull_subdivision(Polygon_2D pol, double& sum_min, double& sum_max, double& bound_min, double& bound_max, double cutoff){
+    Polygon_2D new_pol = simulated_annealing(pol, 1000, "-min", "subdivision", nullptr, nullptr, cutoff);
+    double ratio1;
+    if(new_pol.size() == 1)
+        ratio1 = 1.0;
+    else{
+        if(new_pol.orientation() == -1){
+            new_pol.reverse_orientation();
+        }
+        Polygon_2D KP1;
+        CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP1));
+        ratio1 = new_pol.area()/KP1.area();
 
+    }
     sum_min+=ratio1;
     if(ratio1 > bound_min){
         bound_min = ratio1;
     }
 
-    new_pol = simulated_annealing(pol, 1000, "-max", "subdivision", nullptr, nullptr);
-    if(new_pol.orientation() == -1){
-        new_pol.reverse_orientation();
+    new_pol = simulated_annealing(pol, 1000, "-max", "subdivision", nullptr, nullptr, cutoff);
+    double ratio2;
+    if(new_pol.size() == 1)
+        ratio2 = 0.0;
+    else{
+        if(new_pol.orientation() == -1){
+            new_pol.reverse_orientation();
+        }
+
+        Polygon_2D KP2;
+        CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP2));
+        ratio2 = new_pol.area()/KP2.area();
     }
-    Polygon_2D KP2;
-    CGAL::convex_hull_2(new_pol.begin(), new_pol.end(), std::back_inserter(KP2));
-    double ratio2 = new_pol.area()/KP2.area();
+    
 
     sum_max+=ratio2;
-    if(ratio2 < bound_max){
-        bound_max = ratio2;
+    if(ratio1 < bound_max){
+        bound_max= ratio2;
     }
+
 }
 
 int main(int argc, char* argv[]){
@@ -159,7 +211,9 @@ int main(int argc, char* argv[]){
     if ((dir = opendir (path)) != NULL) {
         while ((ent = readdir (dir)) != NULL) {
             if(strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0){
-                files.push_back(ent->d_name);
+                string s = "/";
+                string path1 = path+s+ent->d_name;
+                files.push_back(path1);
             }
         }
         closedir (dir);
@@ -213,13 +267,11 @@ int main(int argc, char* argv[]){
 
     for(int i = 0; i < files.size(); i++){
         // Read input file
-        string s = "/";
-        string path1 = path+s+files.at(i);
 
         vector<Point_2> points;
 
         ifstream input_file;
-        input_file.open(path1);
+        input_file.open(files.at(i));
 
         int num;
         double x;
@@ -249,31 +301,20 @@ int main(int argc, char* argv[]){
             // lines = points.size();
         }
 
-        int cut_off = 500*points.size()/1000; //500
+        double cut_off = (double)500*points.size()/(double)1000; //500
 
         // Close the file
         input_file.close();
 
-        ////////////////////////
-        ///
-
         //incremental-local_search
         time_start = clock();
         Polygon_2D pol = incremental(points, 1, "1a");
-        local_search_results(pol, sum_min_inc_loc, sum_max_inc_loc, bound_min_inc_loc, bound_max_inc_loc);
-
-        // time_end = clock();
-        // time = time_end - time_start;
-
-        // cut_off -= time;
-        // int next_cut_off = cut_off;
-        // if(cut_off < 0){
-        //     return -1;
-        // }
-    
-
-        ///
-        ////////////////////////
+        if(pol.orientation() == -1){
+            pol.reverse_orientation();
+        }
+        time = clock();
+        cut_off-=(time-time_start)/CLOCKS_PER_SEC;
+        local_search_results(pol, sum_min_inc_loc, sum_max_inc_loc, bound_min_inc_loc, bound_max_inc_loc, cut_off);
         //convex hull- local search
         if(points.size() > lines){
             //PRINTING
@@ -286,8 +327,11 @@ int main(int argc, char* argv[]){
         }
 
         Polygon_2D pol1 = convex_hull(points, 1, nullptr, nullptr);
-        local_search_results(pol1, sum_min_conv_loc, sum_max_conv_loc, bound_min_conv_loc, bound_max_conv_loc);
+        if(pol1.orientation() == -1){
+            pol1.reverse_orientation();
+        }
 
+        local_search_results(pol1, sum_min_conv_loc, sum_max_conv_loc, bound_min_conv_loc, bound_max_conv_loc, cut_off);
         
 
         //incremental - simmulated annealing - local step
@@ -301,7 +345,7 @@ int main(int argc, char* argv[]){
             // lines = points.size();
         }
         
-        annealing_local_step(pol, sum_min_inc_sim_loc, sum_max_inc_sim_loc, bound_min_inc_sim_loc, bound_max_inc_sim_loc);
+        annealing_local_step(pol, sum_min_inc_sim_loc, sum_max_inc_sim_loc, bound_min_inc_sim_loc, bound_max_inc_sim_loc, cut_off);
 
         //convex hull - simmulated annealing - local step
         if(points.size() > lines){
@@ -314,7 +358,7 @@ int main(int argc, char* argv[]){
             // lines = points.size();
         }
 
-        annealing_local_step(pol1, sum_min_conv_sim_loc, sum_max_conv_sim_loc, bound_min_conv_sim_loc, bound_max_conv_sim_loc);
+        annealing_local_step(pol1, sum_min_conv_sim_loc, sum_max_conv_sim_loc, bound_min_conv_sim_loc, bound_max_conv_sim_loc, cut_off);
 
         //incremental - simulated annealing - global step
         if(points.size() > lines){
@@ -327,7 +371,7 @@ int main(int argc, char* argv[]){
             // lines = points.size();
         }
 
-        annealing_global_step(pol, sum_min_inc_sim_glob, sum_max_inc_sim_glob, bound_min_inc_sim_glob, bound_max_inc_sim_glob);
+        annealing_global_step(pol, sum_min_inc_sim_glob, sum_max_inc_sim_glob, bound_min_inc_sim_glob, bound_max_inc_sim_glob, cut_off);
 
         //convex hull - simulated annealing - global step
         if(points.size() > lines){
@@ -340,7 +384,7 @@ int main(int argc, char* argv[]){
             // lines = points.size();
         }
 
-        annealing_global_step(pol1, sum_min_conv_sim_glob, sum_max_conv_sim_glob, bound_min_conv_sim_glob, bound_max_conv_sim_glob);
+        annealing_global_step(pol1, sum_min_conv_sim_glob, sum_max_conv_sim_glob, bound_min_conv_sim_glob, bound_max_conv_sim_glob, cut_off);
 
         //convex hull - subdivision
         if(points.size() > lines){
@@ -359,7 +403,9 @@ int main(int argc, char* argv[]){
             }
         }
         if(lines > 1000)
-            convex_hull_subdivision(pol1, sum_min_conv_sub, sum_max_conv_sub, bound_min_conv_sub, bound_max_conv_sub);
+            convex_hull_subdivision(pol1, sum_min_conv_sub, sum_max_conv_sub, bound_min_conv_sub, bound_max_conv_sub, cut_off);
+
+        
     }
     
     //last print

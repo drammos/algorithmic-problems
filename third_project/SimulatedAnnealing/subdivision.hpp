@@ -1,4 +1,4 @@
 #include "simulated_annealing.hpp"
 using namespace std;
 
-Polygon_2D subdivision(vector<Point_2>, int, string, int cut_off);
+Polygon_2D subdivision(vector<Point_2>, int, string, double cut_off);

@@ -20,4 +20,4 @@ typedef CGAL::Line_2 <K> Line_2D;
 typedef Polygon_2D::Edge_const_iterator EdgeIterator;
 typedef Polygon_2D::Vertex_iterator VertexIterator;
 
-Polygon_2D local_search(Polygon_2D, int, string, double, int cut_off);
+Polygon_2D local_search(Polygon_2D, int, string, double, double);

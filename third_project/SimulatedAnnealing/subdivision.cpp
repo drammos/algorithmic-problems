@@ -57,7 +57,7 @@ bool check_for_lowers(int i, int start, vector<Point_2> points){
 /// @param min_max 
 /// @param threshold 
 /// @return 
-Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_off){
+Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double cut_off){
     // RANDOM for 10<= m <= 100 
 
     random_device random_;
@@ -130,9 +130,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         
         int time_end1 = clock();
         int time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
 
         num_from_spal++;
@@ -226,9 +228,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
 
         int time_end1 = clock();
         int time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
 
         Points result = polygon_1.vertices();
@@ -265,22 +269,26 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         }
         time_end1 = clock();
         time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
         Polygon_2D new_polygon_convex;
         Segment_2 el = spal->edge_left;
         Segment_2 er = spal->edge_right;
         time_start1 = clock();
         
-        new_polygon_convex = convex_hull(internal_points, 1, &polygon_1, false,  &el, &er);
+        new_polygon_convex = convex_hull(internal_points, 1,  &el, &er);
         
         time_end1 = clock();
         time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
 
         if(!new_polygon_convex.is_clockwise_oriented()){
@@ -299,9 +307,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         spal->points_polygon = new_pol_simulated.vertices();  
         time_end1 = clock();
         time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }  
     }
 
@@ -328,9 +338,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         }
         int time_end1 = clock();
         int time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
 
         // start
@@ -346,9 +358,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         }
         time_end1 = clock();
         time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
         
         
@@ -365,9 +379,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         }
         time_end1 = clock();
         time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
     }
 
@@ -393,9 +409,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
 
         int time_end1 = clock();
         int time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
 
         
@@ -413,9 +431,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         }
         time_end1 = clock();
         time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
 
         time_start1 = clock();
@@ -430,9 +450,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, int cut_of
         }
         time_end1 = clock();
         time1 = time_end1 - time_start1;
-        cut_off -= time1;
+        cut_off -= (double)time1/(double)CLOCKS_PER_SEC;
         if(cut_off < 0){
-            exit(EXIT_FAILURE);
+            Polygon_2D pol;
+            pol.push_back(Point_2(0,0));
+            return pol;
         }
 
     }

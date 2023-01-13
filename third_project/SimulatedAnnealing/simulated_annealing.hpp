@@ -23,7 +23,7 @@ typedef Polygon_2D::Vertex_iterator VertexIterator;
 typedef std::vector<Point_2>::iterator pveciterator;
 
 
-Polygon_2D simulated_annealing(Polygon_2D, int, string, string, Segment_2* edge1, Segment_2* edge2, int cut_off);
+Polygon_2D simulated_annealing(Polygon_2D, int, string, string, Segment_2* edge1, Segment_2* edge2, double cut_off);
 bool check_the_x(Point_2, Point_2);
 
 
