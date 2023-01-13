@@ -148,12 +148,11 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double cut
     for(int num = 0; num < spals.size(); num++){
         Spal* spal = spals.at(num);
         vector<Point_2> spal_points = spal->points;
-
         Points result1;
 
         // Create the convex hull
         CGAL::convex_hull_2(spal_points.begin(), spal_points.end(), std::back_inserter(result1));
-
+        
         // Create the polygon
         Polygon_2 polygon_1;
         int time_start1 = clock();
@@ -169,8 +168,8 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double cut
         vector<Point_2> internal_points;
         
         // Find internal points
-        for(int i = 0; i < points.size(); i++){
-            Point_2 point = points.at(i);
+        for(int i = 0; i < spal_points.size(); i++){
+            Point_2 point = spal_points.at(i);
             bool find = false;
             for (pveciterator iter=result1.begin(); iter!=result1.end(); ++iter){
                 if( point == *iter){
@@ -280,7 +279,7 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double cut
         Segment_2 er = spal->edge_right;
         time_start1 = clock();
         
-        new_polygon_convex = convex_hull(internal_points, 1,  &el, &er);
+        new_polygon_convex = convex_hull(internal_points, 1, &polygon_1, false,  &el, &er);
         
         time_end1 = clock();
         time1 = time_end1 - time_start1;
@@ -296,14 +295,18 @@ Polygon_2D subdivision(vector<Point_2> points, int L, string min_max, double cut
         }
 
         Polygon_2D p1 = new_polygon_convex;
+       
 
         time_start1 = clock();
         // Call global
         Polygon_2D new_pol_simulated = simulated_annealing(new_polygon_convex, L, min_max, "global", &spal->edge_right, &spal->edge_left, cut_off);        
 
+
         if(!new_pol_simulated.is_clockwise_oriented()){
             new_pol_simulated.reverse_orientation();
         }
+
+
         spal->points_polygon = new_pol_simulated.vertices();  
         time_end1 = clock();
         time1 = time_end1 - time_start1;

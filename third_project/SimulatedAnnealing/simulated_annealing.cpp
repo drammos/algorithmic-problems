@@ -264,6 +264,22 @@ Polygon_2D local_algorithm(Polygon_2D polygon, int vertices_size, vector<Point_2
     return new_polygon;
 }
 
+bool edge_polygon_intersection(Polygon_2D pol, Segment_2 seg){
+    EdgeIterator it;
+    for(it = pol.edges_begin(); it != pol.edges_end(); it++){
+        Segment_2 tested_segment(it->point(0), it->point(1));
+        if(tested_segment.has_on(seg.point(0)) || tested_segment.has_on(seg.point(1))){
+            continue;
+        }
+        if(seg.has_on(tested_segment.point(0)) || seg.has_on(tested_segment.point(1))){
+            return true;
+        }
+        if(CGAL::do_intersect(tested_segment, seg)){
+            return true;
+        }
+    }
+    return false;
+}
 /// Gloabal step algorithm
 /// @brief 
 /// @param pol 
@@ -427,44 +443,18 @@ Polygon_2D global_step(Polygon_2D pol, string min_max, Segment_2* edge1, Segment
             }
         }
 
-        // Segment_2 seg1(previous_point_first, next_point_first);
-        // Segment_2 seg2(point_second, point_first);
-        // Segment_2 seg3(point_first, next_point_second);
-        // if(!CGAL::do_intersect(seg1, seg2) && !CGAL::do_intersect(seg1, seg3)){
-        //     // cout<<"here"<<endl;
-        //     EdgeIterator it;
-        //     for(it = new_pol.edges_begin(); it != new_pol.edges_end(); it++){
-        //         if(*it != seg1 && *it != seg2 && *it != seg3){
-        //             if(it->point(1) == point_second){
-        //                 if(CGAL::do_intersect(seg1, *it) || CGAL::do_intersect(seg3, *it)){
-        //                     break;
-        //                 }
-        //             }
-        //             else if(it->point(0) == next_point_second){
-        //                 if(CGAL::do_intersect(seg2, *it) || CGAL::do_intersect(seg1, *it)){
-        //                     break;
-        //                 }
-        //             }
-        //             else if(it->point(1) == previous_point_first || it->point(0) == next_point_first){
-        //                 if(CGAL::do_intersect(seg2, *it) || CGAL::do_intersect(seg3, *it)){
-        //                     break;
-        //                 }
-        //             }
-        //             else{
-        //                 if(CGAL::do_intersect(seg2, *it) || CGAL::do_intersect(seg3, *it) || CGAL::do_intersect(seg1, *it)){
-        //                     break;
-        //                 }
-        //             }
-                    
-        //         }
-        //     }
-        //     if(it == new_pol.edges_end()){
-        //         valid = true;
-        //     }
-        // }
-        if(new_pol.is_simple()){
-            valid = true;
+        Segment_2 seg1(previous_point_first, next_point_first);
+        Segment_2 seg2(point_second, point_first);
+        Segment_2 seg3(point_first, next_point_second);
+
+        if(!CGAL::do_intersect(seg1, seg2) && !CGAL::do_intersect(seg1, seg3)){
+            if(!edge_polygon_intersection(new_pol, seg1) && !edge_polygon_intersection(new_pol, seg2) && !edge_polygon_intersection(new_pol,seg3)){
+                valid = true;
+            }
         }
+        // if(new_pol.is_simple()){
+        //     cout<<"simple"<<endl;
+        // }
 
         int time_end1 = clock();
         int time1 = time_end1 - time_start1;
@@ -532,7 +522,7 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string
         Polygon_2D new_pol;
         if(annealing.compare("local") == 0){
             new_pol = local_algorithm(new_polygon, vertices_size, internal_points, cut_off);
-            if(new_pol.size() == 0){
+            if(new_pol.size() == 1){
                 Polygon_2D pol;
                 pol.push_back(Point_2(0,0));
                 return pol;
@@ -540,7 +530,7 @@ Polygon_2D simulated_annealing(Polygon_2D polygon, int L, string min_max, string
         }   
         else{
             new_pol = global_step(new_polygon, min_max, edge1, edge2, cut_off);
-            if(new_pol.size() == 0){
+            if(new_pol.size() == 1){
                 Polygon_2D pol;
                 pol.push_back(Point_2(0,0));
                 return pol;

@@ -1,2 +1,3 @@
-Optimal Area Polygonization
-Algorithm: simulated_annealing_-min
+     ||          Incremental-Local Search             ||             Convex Hull-Local Search          ||   Incremental-Simulated Annealing-Local Step  ||   Convex Hull-Simulated Annealing-Local Step  ||  Incremental-Simulated Annealing-Global Step  ||  Convex Hull-Simulated Annealing-Global Step  ||  Convex Hull-Simulated Annealing-Subdivision  ||
+Size || min score | max score | min bound | max bound || min score | max score | min bound | max bound || min score | max score | min bound | max bound || min score | max score | min bound | max bound || min score | max score | min bound | max bound || min score | max score | min bound | max bound || min score | max score | min bound | max bound ||
+  10 || 0.36387   |  0.82009  |  0.36387  |  0.82009  ||  0.36387  |  0.89321  |  0.36387  |  0.89321  ||  0.75782  |  0.59634  |  0.75782  |  0.59634  ||  0.71860  |  0.65496  |  0.71860  |  0.65496  ||  0.66551  |  0.82009  |  0.66551  |  0.82009  ||  0.65058  |  0.57348  |  0.65058  |  0.57348  ||

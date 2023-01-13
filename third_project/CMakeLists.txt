@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.1...3.23)
 
-project( optimal_polygon )
+project( evaluate )
 
 
 # CGAL and its components
@@ -36,9 +36,9 @@ endif()
 # Creating entries for target: main
 # ############################
 
-add_executable( optimal_polygon main.cpp LocalSearch/local_search.cpp SimulatedAnnealing/simulated_annealing.cpp SimulatedAnnealing/subdivision.cpp PolygonsAlgorithm/incremental.cpp PolygonsAlgorithm/convex_hull_algorithmic.cpp)
+add_executable( evaluate main_new.cpp LocalSearch/local_search.cpp SimulatedAnnealing/simulated_annealing.cpp SimulatedAnnealing/subdivision.cpp PolygonsAlgorithm/incremental.cpp PolygonsAlgorithm/convex_hull_algorithmic.cpp)
 
-add_to_cached_list( CGAL_EXECUTABLE_TARGETS main )
+add_to_cached_list( CGAL_EXECUTABLE_TARGETS main_new )
 
 # Link the executable to CGAL and third-party libraries
-target_link_libraries(optimal_polygon PRIVATE CGAL::CGAL )
+target_link_libraries(evaluate PRIVATE CGAL::CGAL )

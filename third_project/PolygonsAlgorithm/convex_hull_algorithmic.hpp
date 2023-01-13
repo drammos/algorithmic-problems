@@ -19,7 +19,7 @@ typedef Polygon_2::Vertex_iterator VertexIterator;
 typedef Polygon_2::Edge_const_iterator EdgeIterator;
 
 
-Polygon_2 convex_hull(vector<Point_2>, int, Segment_2*, Segment_2*);
+Polygon_2 convex_hull( vector<Point_2>, int, Polygon_2*, bool, Segment_2*, Segment_2*);
 
 struct polygon{
     Polygon_2 polygon;

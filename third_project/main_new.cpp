@@ -326,7 +326,7 @@ int main(int argc, char* argv[]){
             // lines = points.size();
         }
 
-        Polygon_2D pol1 = convex_hull(points, 1, nullptr, nullptr);
+        Polygon_2D pol1 = convex_hull(points, 1, nullptr, true, nullptr, nullptr);
         if(pol1.orientation() == -1){
             pol1.reverse_orientation();
         }
