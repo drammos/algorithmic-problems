@@ -74,34 +74,35 @@ Polygon_2D remove_path(vector<Point_2> path, Polygon_2D pol, double& cut_off){
 Polygon_2D change_path(vector<Point_2> path, Segment_2 edge, Polygon_2D pol, double& cut_off){
 
     for(VertexIterator vit = pol.vertices_begin(); vit != pol.vertices_end(); vit++){
+
         if(vit->x() == edge.point(1).x() && vit->y() == edge.point(1).y()){
             pol.insert(vit, path.at(0));
+
+            for(int i = 1; i < path.size(); i++){
+                int time_start = clock();
+
+                VertexIterator vit = pol.vertices_begin();
+                while(vit != pol.vertices_end()){
+
+                    if(vit->x() == path.at(i-1).x() && vit->y() == path.at(i-1).y()){
+
+                        pol.insert(vit, path.at(i));
+                        break;
+                    }
+
+                    vit++;
+                    int time_end = clock();
+                    int time = time_end - time_start;
+                    cut_off -= (double)time/(double)CLOCKS_PER_SEC;
+                    
+                    if(cut_off<0){
+                        Polygon_2D pol;
+                        pol.push_back(Point_2(0,0));
+                        return pol;
+                    }
+                }
+            }
             break;
-        }
-    }
-
-    for(int i = 1; i < path.size(); i++){
-
-        VertexIterator vit = pol.vertices_begin();
-        while(vit != pol.vertices_end()){
-            int time_start = clock();
-
-            if(vit->x() == path.at(i-1).x() && vit->y() == path.at(i-1).y()){
-
-                pol.insert(vit, path.at(i));
-                break;
-            }
-
-            vit++;
-            int time_end = clock();
-            int time = time_end - time_start;
-            cut_off -= (double)time/(double)CLOCKS_PER_SEC;
-            
-            if(cut_off<0){
-                Polygon_2D pol;
-                pol.push_back(Point_2(0,0));
-                return pol;
-            }
         }
     }
 
@@ -169,7 +170,7 @@ Polygon_2D local_search(Polygon_2D pol, int L, string min_max, double threshold,
                 }
             }
         }
-
+        
         if(alternatives.size() > 0){
             //finding polygon of min or max area
             if(!min_max.compare("-min")){

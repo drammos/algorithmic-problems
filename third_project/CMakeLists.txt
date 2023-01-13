@@ -36,7 +36,7 @@ endif()
 # Creating entries for target: main
 # ############################
 
-add_executable( evaluate main_new.cpp LocalSearch/local_search.cpp SimulatedAnnealing/simulated_annealing.cpp SimulatedAnnealing/subdivision.cpp PolygonsAlgorithm/incremental.cpp PolygonsAlgorithm/convex_hull_algorithmic.cpp)
+add_executable( evaluate main.cpp LocalSearch/local_search.cpp SimulatedAnnealing/simulated_annealing.cpp SimulatedAnnealing/subdivision.cpp PolygonsAlgorithm/incremental.cpp PolygonsAlgorithm/convex_hull_algorithmic.cpp)
 
 add_to_cached_list( CGAL_EXECUTABLE_TARGETS main_new )
 
