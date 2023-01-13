@@ -20,6 +20,7 @@ bool compare(string file1, string file2){
 
     while (getline(file, line))
         count2++;
+    file.close();
     return count1<count2;
 }
 
@@ -208,6 +209,8 @@ int main(int argc, char* argv[]){
     DIR *dir;
     struct dirent *ent;
     vector<string> files;
+
+    //opening input files
     if ((dir = opendir (path)) != NULL) {
         while ((ent = readdir (dir)) != NULL) {
             if(strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0){
@@ -223,9 +226,21 @@ int main(int argc, char* argv[]){
         perror ("");
         return EXIT_FAILURE;
     }
+
+    //files are sorted by size
     sort(files.begin(), files.end(), compare);
 
-    int lines = 10;
+    ifstream file;
+    file.open(files.at(0));
+
+    string line;
+    int count = 0;
+    while (getline(file, line))
+        count++;
+    file.close();
+    int lines = count - 2;
+
+    //sums and bounds initialization
     double sum_min_inc_loc = 0;
     double sum_max_inc_loc = 0;
     double bound_max_inc_loc = 2.0;
@@ -298,10 +313,10 @@ int main(int argc, char* argv[]){
             sum_max_inc_loc = 0;
             bound_max_inc_loc = 2.0;
             bound_min_inc_loc = -2.0;
-            // lines = points.size();
         }
 
-        double cut_off = (double)500*points.size()/(double)1000; //500
+        double cut_off_inc = (double)500*points.size()/(double)1000;
+        double cut_off_conv = (double)500*points.size()/(double)1000;
 
         // Close the file
         input_file.close();
@@ -313,8 +328,9 @@ int main(int argc, char* argv[]){
             pol.reverse_orientation();
         }
         time = clock();
-        cut_off-=(time-time_start)/CLOCKS_PER_SEC;
-        local_search_results(pol, sum_min_inc_loc, sum_max_inc_loc, bound_min_inc_loc, bound_max_inc_loc, cut_off);
+        cut_off_inc-=(double)(time-time_start)/(double)CLOCKS_PER_SEC;
+        local_search_results(pol, sum_min_inc_loc, sum_max_inc_loc, bound_min_inc_loc, bound_max_inc_loc, cut_off_inc);
+
         //convex hull- local search
         if(points.size() > lines){
             //PRINTING
@@ -323,18 +339,19 @@ int main(int argc, char* argv[]){
             sum_max_conv_loc = 0;
             bound_max_conv_loc = 2.0;
             bound_min_conv_loc = -2.0;
-            // lines = points.size();
         }
 
+        time_start = clock();
         Polygon_2D pol1 = convex_hull(points, 1, nullptr, true, nullptr, nullptr);
         if(pol1.orientation() == -1){
             pol1.reverse_orientation();
         }
-
-        local_search_results(pol1, sum_min_conv_loc, sum_max_conv_loc, bound_min_conv_loc, bound_max_conv_loc, cut_off);
+        time = clock();
+        cut_off_conv-=(double)(time-time_start)/(double)CLOCKS_PER_SEC;
+        local_search_results(pol1, sum_min_conv_loc, sum_max_conv_loc, bound_min_conv_loc, bound_max_conv_loc, cut_off_conv);
         
 
-        //incremental - simmulated annealing - local step
+        //incremental - simulated annealing - local step
         if(points.size() > lines){
             //PRINTING
             cout<<setprecision(5)<<"  "<<sum_min_inc_sim_loc<<"  |  "<<sum_max_inc_sim_loc<<"  |  "<<bound_min_inc_sim_loc<<"  |  "<<bound_max_inc_sim_loc<<"  ||";
@@ -342,12 +359,11 @@ int main(int argc, char* argv[]){
             sum_max_inc_sim_loc = 0;
             bound_max_inc_sim_loc = 2.0;
             bound_min_inc_sim_loc = -2.0;
-            // lines = points.size();
         }
         
-        annealing_local_step(pol, sum_min_inc_sim_loc, sum_max_inc_sim_loc, bound_min_inc_sim_loc, bound_max_inc_sim_loc, cut_off);
+        annealing_local_step(pol, sum_min_inc_sim_loc, sum_max_inc_sim_loc, bound_min_inc_sim_loc, bound_max_inc_sim_loc, cut_off_inc);
 
-        //convex hull - simmulated annealing - local step
+        //convex hull - simulated annealing - local step
         if(points.size() > lines){
             //PRINTING
             cout<<setprecision(5)<<"  "<<sum_min_conv_sim_loc<<"  |  "<<sum_max_conv_sim_loc<<"  |  "<<bound_min_conv_sim_loc<<"  |  "<<bound_max_conv_sim_loc<<"  ||";
@@ -355,10 +371,9 @@ int main(int argc, char* argv[]){
             sum_max_conv_sim_loc = 0;
             bound_max_conv_sim_loc = 2.0;
             bound_min_conv_sim_loc = -2.0;
-            // lines = points.size();
         }
 
-        annealing_local_step(pol1, sum_min_conv_sim_loc, sum_max_conv_sim_loc, bound_min_conv_sim_loc, bound_max_conv_sim_loc, cut_off);
+        annealing_local_step(pol1, sum_min_conv_sim_loc, sum_max_conv_sim_loc, bound_min_conv_sim_loc, bound_max_conv_sim_loc, cut_off_conv);
 
         //incremental - simulated annealing - global step
         if(points.size() > lines){
@@ -368,10 +383,9 @@ int main(int argc, char* argv[]){
             sum_max_inc_sim_glob = 0;
             bound_max_inc_sim_glob = 2.0;
             bound_min_inc_sim_glob = -2.0;
-            // lines = points.size();
         }
 
-        annealing_global_step(pol, sum_min_inc_sim_glob, sum_max_inc_sim_glob, bound_min_inc_sim_glob, bound_max_inc_sim_glob, cut_off);
+        annealing_global_step(pol, sum_min_inc_sim_glob, sum_max_inc_sim_glob, bound_min_inc_sim_glob, bound_max_inc_sim_glob, cut_off_inc);
 
         //convex hull - simulated annealing - global step
         if(points.size() > lines){
@@ -381,10 +395,9 @@ int main(int argc, char* argv[]){
             sum_max_conv_sim_glob = 0;
             bound_max_conv_sim_glob = 2.0;
             bound_min_conv_sim_glob = -2.0;
-            // lines = points.size();
         }
 
-        annealing_global_step(pol1, sum_min_conv_sim_glob, sum_max_conv_sim_glob, bound_min_conv_sim_glob, bound_max_conv_sim_glob, cut_off);
+        annealing_global_step(pol1, sum_min_conv_sim_glob, sum_max_conv_sim_glob, bound_min_conv_sim_glob, bound_max_conv_sim_glob, cut_off_conv);
 
         //convex hull - subdivision
         if(points.size() > lines){
@@ -403,7 +416,7 @@ int main(int argc, char* argv[]){
             }
         }
         if(lines > 1000)
-            convex_hull_subdivision(pol1, sum_min_conv_sub, sum_max_conv_sub, bound_min_conv_sub, bound_max_conv_sub, cut_off);
+            convex_hull_subdivision(pol1, sum_min_conv_sub, sum_max_conv_sub, bound_min_conv_sub, bound_max_conv_sub, cut_off_conv);
 
         
     }
