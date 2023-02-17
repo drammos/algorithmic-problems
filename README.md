@@ -1,5 +1,5 @@
 # algorithmic--problems
 
-This is a Project for the lesson Software Development for Algorithmic Problems in our univiersity DIT, UoA.
+This is our implementation of the projects assigned in the course "Software Development for Algorithmic Problems" in our univiersity DIT, UoA.
 
 # 
